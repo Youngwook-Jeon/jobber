@@ -1,0 +1,7 @@
+secrets.md
+
+.DS_Store
+
+.env
+
+/services/jobber-shared/

@@ -1,0 +1,94 @@
+version: '3.9'
+services:
+  redis:
+    container_name: jobber_redis
+    image: redis:alpine
+    ports:
+      - '6379:6379'
+    command: redis-server --loglevel warning
+
+  mongodb:
+    container_name: jobber_mongodb
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+
+  mysql:
+    container_name: jobber_mysql
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_USER=jobber
+      - MYSQL_DATABASE=jobber_auth
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_PASSWORD=password
+    ports:
+      - '3306:3306'
+
+  postgres:
+    container_name: jobber_postgres
+    image: postgres
+    environment:
+      - POSTGRES_USER=jobber
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=jobber_reviews
+    ports:
+      - '5432:5432'
+
+  rabbitmq:
+    container_name: jobber_rabbitmq
+    image: rabbitmq:3.13-rc-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=jobber
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  elasticsearch:
+    container_name: jobber_elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    environment:
+      ES_JAVA_OPTS: -Xmx1g -Xms1g
+      bootstrap.memory_lock: "true"
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      xpack.security.authc.api_key.enabled: "true"
+      xpack.monitoring.collection.enabled: "true"
+      xpack.security.enrollment.enabled: "true"
+    ports:
+      - '9300:9300'
+      - '9200:9200'
+
+  kibana:
+    container_name: jobber_kibana
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://jobber_elasticsearch:9200"]
+    ports:
+      - 5601:5601
+    volumes:
+      - ./kibana.yml/:/usr/share/kibana/config/kibana.yml:ro
+    depends_on: 
+      - elasticsearch
+
+  notifications:
+    container_name: jobber_notification
+    build:
+      context: ../services/notification-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - 4001:4001
+    env_file: ../services/notification-service/.env
+    environment:
+      - ENABLE_APM=0
+      - NODE_ENV=development
+      - CLIENT_URL=http://localhost:3000
+      - RABBITMQ_ENDPOINT=amqp://jobber:password@jobber_rabbitmq:5672
+      # - SENDER_EMAIL=jarret.willms14@ethereal.email
+      # - SENDER_EMAIL_PASSWORD=hVS46SVq3QSs5XX5NH
+      - ELASTIC_SEARCH_URL=http://jobber_elasticsearch:9200
+      - ELASTIC_APM_SERVER_URL=http://localhost:8200
+      - ELASTIC_APM_SECRET_TOKEN=
+    depends_on:
+      - elasticsearch
