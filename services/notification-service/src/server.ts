@@ -1,10 +1,10 @@
+import http from 'http';
+
 import { winstonLogger } from '@youngwook-jeon/jobber-shared';
 import 'express-async-errors';
-import http from 'http';
 import { Logger } from 'winston';
 import { Application } from 'express';
 import { Channel } from 'amqplib';
-
 import { config } from '@notifications/config';
 import { healthRoutes } from '@notifications/routes';
 import { checkConnection } from '@notifications/elasticsearch';

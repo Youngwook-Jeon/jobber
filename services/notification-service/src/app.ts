@@ -1,6 +1,5 @@
 import express from 'express';
 import { winstonLogger } from '@youngwook-jeon/jobber-shared';
-
 import { config } from '@notifications/config';
 import { start } from '@notifications/server';
 

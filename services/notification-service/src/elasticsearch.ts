@@ -1,6 +1,5 @@
 import { Client } from '@elastic/elasticsearch';
 import { winstonLogger } from '@youngwook-jeon/jobber-shared';
-
 import { config } from '@notifications/config';
 
 const log = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'notificationElasticSearchServer', 'debug');
