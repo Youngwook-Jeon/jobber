@@ -72,52 +72,52 @@ services:
     depends_on: 
       - elasticsearch
 
-  gateway:
-    container_name: jobber_gateway
-    build:
-      context: ../services/gateway-service
-      dockerfile: Dockerfile.dev
-    ports:
-      - 4000:4000
-    env_file: ../services/gateway-service/.env
-    environment:
-      - ENABLE_APM=0
-      - GATEWAY_JWT_TOKEN=9931ddd9952b63de3c744ed795543b4e
-      - JWT_TOKEN=8db8f85991bb28f45ac0107f2a1b349c
-      - NODE_ENV=development
-      - SECRET_KEY_ONE=032c5c3cfc37938ae6dd43d3a3ec7834
-      - SECRET_KEY_TWO=d66e377018c0bc0b5772bbc9b131e6d9
-      - CLIENT_URL=http://localhost:3000
-      - AUTH_BASE_URL=http://auth_container:4002
-      - USERS_BASE_URL=http://localhost:4003
-      - GIG_BASE_URL=http://localhost:4004
-      - MESSAGE_BASE_URL=http://localhost:4005
-      - ORDER_BASE_URL=http://localhost:4006
-      - REVIEW_BASE_URL=http://localhost:4007
-      - REDIS_HOST=redis://jobber_redis:6379
-      - ELASTIC_SEARCH_URL=http://jobber_elasticsearch:9200
-      - ELASTIC_APM_SERVER_URL=http://localhost:8200
-      - ELASTIC_APM_SECRET_TOKEN=
-    depends_on:
-      - elasticsearch
+  # gateway:
+  #   container_name: jobber_gateway
+  #   build:
+  #     context: ../services/gateway-service
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 4000:4000
+  #   env_file: ../services/gateway-service/.env
+  #   environment:
+  #     - ENABLE_APM=0
+  #     - GATEWAY_JWT_TOKEN=9931ddd9952b63de3c744ed795543b4e
+  #     - JWT_TOKEN=8db8f85991bb28f45ac0107f2a1b349c
+  #     - NODE_ENV=development
+  #     - SECRET_KEY_ONE=032c5c3cfc37938ae6dd43d3a3ec7834
+  #     - SECRET_KEY_TWO=d66e377018c0bc0b5772bbc9b131e6d9
+  #     - CLIENT_URL=http://localhost:3000
+  #     - AUTH_BASE_URL=http://auth_container:4002
+  #     - USERS_BASE_URL=http://localhost:4003
+  #     - GIG_BASE_URL=http://localhost:4004
+  #     - MESSAGE_BASE_URL=http://localhost:4005
+  #     - ORDER_BASE_URL=http://localhost:4006
+  #     - REVIEW_BASE_URL=http://localhost:4007
+  #     - REDIS_HOST=redis://jobber_redis:6379
+  #     - ELASTIC_SEARCH_URL=http://jobber_elasticsearch:9200
+  #     - ELASTIC_APM_SERVER_URL=http://localhost:8200
+  #     - ELASTIC_APM_SECRET_TOKEN=
+  #   depends_on:
+  #     - elasticsearch
 
-  notifications:
-    container_name: jobber_notification
-    build:
-      context: ../services/notification-service
-      dockerfile: Dockerfile.dev
-    ports:
-      - 4001:4001
-    env_file: ../services/notification-service/.env
-    environment:
-      - ENABLE_APM=0
-      - NODE_ENV=development
-      - CLIENT_URL=http://localhost:3000
-      - RABBITMQ_ENDPOINT=amqp://jobber:password@jobber_rabbitmq:5672
-      # - SENDER_EMAIL=jarret.willms14@ethereal.email
-      # - SENDER_EMAIL_PASSWORD=hVS46SVq3QSs5XX5NH
-      - ELASTIC_SEARCH_URL=http://jobber_elasticsearch:9200
-      - ELASTIC_APM_SERVER_URL=http://localhost:8200
-      - ELASTIC_APM_SECRET_TOKEN=
-    depends_on:
-      - elasticsearch
+  # notifications:
+  #   container_name: jobber_notification
+  #   build:
+  #     context: ../services/notification-service
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 4001:4001
+  #   env_file: ../services/notification-service/.env
+  #   environment:
+  #     - ENABLE_APM=0
+  #     - NODE_ENV=development
+  #     - CLIENT_URL=http://localhost:3000
+  #     - RABBITMQ_ENDPOINT=amqp://jobber:password@jobber_rabbitmq:5672
+  #     # - SENDER_EMAIL=jarret.willms14@ethereal.email
+  #     # - SENDER_EMAIL_PASSWORD=hVS46SVq3QSs5XX5NH
+  #     - ELASTIC_SEARCH_URL=http://jobber_elasticsearch:9200
+  #     - ELASTIC_APM_SERVER_URL=http://localhost:8200
+  #     - ELASTIC_APM_SECRET_TOKEN=
+  #   depends_on:
+  #     - elasticsearch

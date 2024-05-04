@@ -10,7 +10,8 @@ const log = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'mailTransportHelper',
 async function emailTemplates(template: string, receiver: string, locals: IEmailLocals): Promise<void> {
   try {
     const transporter = nodemailer.createTransport({
-      host: 'Naver',
+      service: 'naverworks',
+      host: 'smtp.naver.com',
       port: 587,
       auth: {
         user: config.SENDER_EMAIL,
@@ -40,7 +41,7 @@ async function emailTemplates(template: string, receiver: string, locals: IEmail
 
     await email.send({
       template: path.join(__dirname, '..', 'src/emails', template),
-      message: { to: receiver },
+      message: { to: receiver, from: config.SENDER_EMAIL },
       locals
     });
   } catch (error) {

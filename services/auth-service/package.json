@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@elastic/elasticsearch": "^8.13.1",
-    "@youngwook-jeon/jobber-shared": "^0.1.5",
+    "@youngwook-jeon/jobber-shared": "^0.1.6",
     "amqplib": "^0.10.4",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.2.0",
