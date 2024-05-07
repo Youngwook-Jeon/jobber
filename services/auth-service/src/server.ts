@@ -9,7 +9,7 @@ import cors from 'cors';
 import compression from 'compression';
 import { verify } from 'jsonwebtoken';
 import { config } from '@auth/config';
-import { checkConnection } from '@auth/elasticsearch';
+import { checkConnection, createIndex } from '@auth/elasticsearch';
 import { appRoutes } from '@auth/routes';
 import { createConnection } from '@auth/queues/connection';
 
@@ -65,6 +65,7 @@ async function startQueues(): Promise<void> {
 
 function startElasticSearch(): void {
   checkConnection();
+  createIndex('gigs');
 }
 
 function authErrorHandler(app: Application): void {
