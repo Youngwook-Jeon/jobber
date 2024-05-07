@@ -3,7 +3,7 @@ import { SignUp } from '@gateway/controllers/auth/signup';
 import { SignIn } from '@gateway/controllers/auth/signin';
 import { VerifyEmail } from '@gateway/controllers/auth/verify-email';
 import { Password } from '@gateway/controllers/auth/password';
-// import { AuthSeed } from '@gateway/controllers/auth/seed';
+import { AuthSeed } from '@gateway/controllers/auth/seed';
 // import { Signout } from '@gateway/controllers/auth/signout';
 // import { VerifyOTP } from '@gateway/controllers/auth/verify-otp';
 
@@ -23,7 +23,7 @@ class AuthRoutes {
     this.router.put('/auth/reset-password/:token', Password.prototype.resetPassword);
     this.router.put('/auth/change-password', Password.prototype.changePassword);
     // this.router.put('/auth/verify-otp/:otp', VerifyOTP.prototype.update);
-    // this.router.put('/auth/seed/:count', AuthSeed.prototype.create);
+    this.router.put('/auth/seed/:count', AuthSeed.prototype.create);
     return this.router;
   }
 }
