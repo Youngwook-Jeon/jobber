@@ -7,12 +7,19 @@ import { Application, Request, Response, NextFunction, json, urlencoded } from '
 import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
-import { verify } from 'jsonwebtoken';
 import compression from 'compression';
+import { verify } from 'jsonwebtoken';
+import { Channel } from 'amqplib';
 import { config } from '@user/config';
 import { checkConnection } from '@user/elasticsearch';
 import { appRoutes } from '@user/routes';
 import { createConnection } from '@user/queues/connection';
+import {
+  consumeBuyerDirectMessage,
+  consumeReviewFanoutMessages,
+  consumeSeedGigDirectMessages,
+  consumeSellerDirectMessage
+} from '@user/queues/user.consumer';
 
 const SERVER_PORT = 4003;
 const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'userServer', 'debug');
@@ -59,7 +66,11 @@ const routesMiddleware = (app: Application): void => {
 };
 
 const startQueues = async (): Promise<void> => {
-  await createConnection();
+  const userChannel: Channel = (await createConnection()) as Channel;
+  await consumeBuyerDirectMessage(userChannel);
+  await consumeSellerDirectMessage(userChannel);
+  await consumeReviewFanoutMessages(userChannel);
+  await consumeSeedGigDirectMessages(userChannel);
 };
 
 const startElasticSearch = (): void => {
