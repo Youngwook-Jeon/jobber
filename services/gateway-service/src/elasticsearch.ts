@@ -2,7 +2,7 @@ import { winstonLogger } from '@youngwook-jeon/jobber-shared';
 import { config } from '@gateway/config';
 import { Client } from '@elastic/elasticsearch';
 
-const log = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'notificationApp', 'debug');
+const log = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'apiGatewayElasticConnection', 'debug');
 
 class ElasticSearch {
   private elasticSearchClient: Client;
@@ -27,4 +27,4 @@ class ElasticSearch {
   }
 }
 
-export const elasticsearch = new ElasticSearch();
+export const elasticSearch = new ElasticSearch();

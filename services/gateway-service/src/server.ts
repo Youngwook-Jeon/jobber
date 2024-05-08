@@ -1,22 +1,35 @@
 import http from 'http';
 
+import 'express-async-errors';
 import { CustomError, IErrorResponse, winstonLogger } from '@youngwook-jeon/jobber-shared';
-import { Application, NextFunction, Request, Response, json, urlencoded } from 'express';
+import { Application, Request, Response, json, urlencoded, NextFunction } from 'express';
+import { Logger } from 'winston';
 import cookieSession from 'cookie-session';
+import cors from 'cors';
 import hpp from 'hpp';
 import helmet from 'helmet';
-import cors from 'cors';
 import compression from 'compression';
 import { StatusCodes } from 'http-status-codes';
+import { Server } from 'socket.io';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
 import { config } from '@gateway/config';
-import { elasticsearch } from '@gateway/elasticsearch';
+import { elasticSearch } from '@gateway/elasticsearch';
 import { appRoutes } from '@gateway/routes';
 import { axiosAuthInstance } from '@gateway/services/api/auth.service';
 import { axiosBuyerInstance } from '@gateway/services/api/buyer.service';
 import { axiosSellerInstance } from '@gateway/services/api/seller.service';
+import { axiosGigInstance } from '@gateway/services/api/gig.service';
+import { SocketIOAppHandler } from '@gateway/sockets/socket';
+// import { axiosMessageInstance } from '@gateway/services/api/message.service';
+// import { axiosOrderInstance } from '@gateway/services/api/order.service';
+// import { axiosReviewInstance } from '@gateway/services/api/review.service';
+import { isAxiosError } from 'axios';
 
 const SERVER_PORT = 4000;
-const log = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'apiGatewayServer', 'debug');
+const DEFAULT_ERROR_CODE = 500;
+const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'apiGatewayServer', 'debug');
+export let socketIO: Server;
 
 export class GatewayServer {
   private app: Application;
@@ -41,8 +54,11 @@ export class GatewayServer {
         name: 'session',
         keys: [`${config.SECRET_KEY_ONE}`, `${config.SECRET_KEY_TWO}`],
         maxAge: 24 * 7 * 3600000,
-        secure: config.NODE_ENV !== 'development'
-        // sameSite: "none"
+        secure: config.NODE_ENV !== 'development',
+        ...(config.NODE_ENV !== 'development' &&
+          {
+            // sameSite: 'none'
+          })
       })
     );
     app.use(hpp());
@@ -60,6 +76,10 @@ export class GatewayServer {
         axiosAuthInstance.defaults.headers['Authorization'] = `Bearer ${req.session?.jwt}`;
         axiosBuyerInstance.defaults.headers['Authorization'] = `Bearer ${req.session?.jwt}`;
         axiosSellerInstance.defaults.headers['Authorization'] = `Bearer ${req.session?.jwt}`;
+        axiosGigInstance.defaults.headers['Authorization'] = `Bearer ${req.session?.jwt}`;
+        // axiosMessageInstance.defaults.headers['Authorization'] = `Bearer ${req.session?.jwt}`;
+        // axiosOrderInstance.defaults.headers['Authorization'] = `Bearer ${req.session?.jwt}`;
+        // axiosReviewInstance.defaults.headers['Authorization'] = `Bearer ${req.session?.jwt}`;
       }
       next();
     });
@@ -76,42 +96,73 @@ export class GatewayServer {
   }
 
   private startElasticSearch(): void {
-    elasticsearch.checkConnection();
+    elasticSearch.checkConnection();
   }
 
   private errorHandler(app: Application): void {
-    app.use('*', (req, res, next) => {
+    app.use('*', (req: Request, res: Response, next: NextFunction) => {
       const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
       log.log('error', `${fullUrl} endpoint does not exist.`, '');
       res.status(StatusCodes.NOT_FOUND).json({ message: 'The endpoint called does not exist.' });
       next();
     });
+
     app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
-      log.log('error', `GatewayService ${error.comingFrom}:`, error);
       if (error instanceof CustomError) {
+        log.log('error', `GatewayService ${error.comingFrom}:`, error);
         res.status(error.statusCode).json(error.serializeErrors());
       }
+
+      if (isAxiosError(error)) {
+        log.log('error', `GatewayService Axios Error - ${error?.response?.data?.comingFrom}:`, error);
+        res
+          .status(error?.response?.data?.statusCode ?? DEFAULT_ERROR_CODE)
+          .json({ message: error?.response?.data?.message ?? 'Error occurred.' });
+      }
+
       next();
     });
   }
 
   private async startServer(app: Application): Promise<void> {
     try {
-      const httpServer = new http.Server(app);
+      const httpServer: http.Server = new http.Server(app);
+      const socketIO: Server = await this.createSocketIO(httpServer);
       this.startHttpServer(httpServer);
+      this.socketIOConnections(socketIO);
     } catch (error) {
       log.log('error', 'GatewayService startServer() error method:', error);
     }
   }
 
+  private async createSocketIO(httpServer: http.Server): Promise<Server> {
+    const io: Server = new Server(httpServer, {
+      cors: {
+        origin: `${config.CLIENT_URL}`,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+      }
+    });
+    const pubClient = createClient({ url: config.REDIS_HOST });
+    const subClient = pubClient.duplicate();
+    await Promise.all([pubClient.connect(), subClient.connect()]);
+    io.adapter(createAdapter(pubClient, subClient));
+    socketIO = io;
+    return io;
+  }
+
   private async startHttpServer(httpServer: http.Server): Promise<void> {
     try {
-      log.info(`Gateway server with process id: ${process.pid} has started.`);
+      log.info(`Gateway server has started with process id ${process.pid}`);
       httpServer.listen(SERVER_PORT, () => {
-        log.info(`Gateway server is running on port ${SERVER_PORT}`);
+        log.info(`Gateway server running on port ${SERVER_PORT}`);
       });
     } catch (error) {
       log.log('error', 'GatewayService startServer() error method:', error);
     }
+  }
+
+  private socketIOConnections(io: Server): void {
+    const socketIoApp = new SocketIOAppHandler(io);
+    socketIoApp.listen();
   }
 }
