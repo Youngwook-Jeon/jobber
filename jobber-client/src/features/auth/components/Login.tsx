@@ -7,7 +7,7 @@ import TextInput from 'src/shared/inputs/TextInput';
 import { IModalBgProps } from 'src/shared/modals/interfaces/modal.interface';
 import ModalBg from 'src/shared/modals/ModalBg';
 
-const LoginModal: FC<IModalBgProps> = ({ onClose }): ReactElement => {
+const LoginModal: FC<IModalBgProps> = ({ onClose, onToggle, onTogglePassword }): ReactElement => {
   return (
     <ModalBg>
       <div className="relative top-[20%] mx-auto w-11/12 max-w-md rounded-lg bg-white md:w-2/3">
@@ -68,9 +68,9 @@ const LoginModal: FC<IModalBgProps> = ({ onClose }): ReactElement => {
           <div className="flex justify-end">
             <div
               onClick={() => {
-                // if (onTogglePassword) {
-                //   onTogglePassword(true);
-                // }
+                if (onTogglePassword) {
+                  onTogglePassword(true);
+                }
               }}
               className="mb-6 ml-2 cursor-pointer text-sm text-blue-600 hover:underline dark:text-blue-500"
             >
@@ -96,9 +96,9 @@ const LoginModal: FC<IModalBgProps> = ({ onClose }): ReactElement => {
               Not yet a memeber?{' '}
               <p
                 onClick={() => {
-                  //   if (onToggle) {
-                  //     onToggle(true);
-                  //   }
+                  if (onToggle) {
+                    onToggle(true);
+                  }
                 }}
                 className="ml-2 flex cursor-pointer text-blue-600 hover:underline"
               >

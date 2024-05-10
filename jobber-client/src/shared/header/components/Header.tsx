@@ -2,6 +2,7 @@ import { FC, lazy, LazyExoticComponent, ReactElement, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import LoginModal from 'src/features/auth/components/Login';
+import RegisterModal from 'src/features/auth/components/Register';
 import { IButtonProps } from 'src/shared/shared.interface';
 
 import { IHeader, IHeaderModalProps } from '../interfaces/header.interface';
@@ -26,11 +27,10 @@ const Header: FC<IHeader> = ({ navClass }): ReactElement => {
         />
       )}
       {showModal.register && (
-        // <RegisterModal
-        //   onClose={() => setShowModal((item: IHeaderModalProps) => ({ ...item, register: false }))}
-        //   onToggle={() => setShowModal((item: IHeaderModalProps) => ({ ...item, login: true, register: false }))}
-        // />
-        <></>
+        <RegisterModal
+          onClose={() => setShowModal((item: IHeaderModalProps) => ({ ...item, register: false }))}
+          onToggle={() => setShowModal((item: IHeaderModalProps) => ({ ...item, login: true, register: false }))}
+        />
       )}
       {showModal.forgotPassword && (
         // <ForgotPasswordModal
