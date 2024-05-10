@@ -1,7 +1,7 @@
 // import { Dispatch } from '@reduxjs/toolkit';
 import axios, { AxiosResponse } from 'axios';
-// import countries, { LocalizedCountryNames } from 'i18n-iso-countries';
-// import enLocale from 'i18n-iso-countries/langs/en.json';
+import countries, { LocalizedCountryNames } from 'i18n-iso-countries';
+import enLocale from 'i18n-iso-countries/langs/en.json';
 import { filter } from 'lodash';
 // import millify from 'millify';
 // import { NavigateFunction } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { filter } from 'lodash';
 import { IOrderDocument } from 'src/features/order/interfaces/order.interface';
 // import { api } from 'src/store/api';
 
-// countries.registerLocale(enLocale);
+countries.registerLocale(enLocale);
 
 export const lowerCase = (str: string): string => {
   return str.toLowerCase();
@@ -75,10 +75,10 @@ export const expectedGigDelivery = (): string[] => {
   ];
 };
 
-// export const countriesList = (): string[] => {
-//   const countriesObj: LocalizedCountryNames<{ select: 'official' }> = countries.getNames('en', { select: 'official' });
-//   return Object.values(countriesObj);
-// };
+export const countriesList = (): string[] => {
+  const countriesObj: LocalizedCountryNames<{ select: 'official' }> = countries.getNames('en', { select: 'official' });
+  return Object.values(countriesObj);
+};
 
 export const saveToSessionStorage = (data: string, username: string): void => {
   window.sessionStorage.setItem('isLoggedIn', data);

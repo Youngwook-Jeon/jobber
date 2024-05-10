@@ -1,13 +1,32 @@
-import { FC, ReactElement, useState } from 'react';
-import { FaChevronLeft, FaEye, FaTimes } from 'react-icons/fa';
+import { ChangeEvent, FC, ReactElement, useState } from 'react';
+import { useDeviceData, useMobileOrientation } from 'react-device-detect';
+import { FaChevronLeft, FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
 import Button from 'src/shared/button/Button';
-// import Dropdown from 'src/shared/dropdown/Dropdown';
+import Dropdown from 'src/shared/dropdown/Dropdown';
 import TextInput from 'src/shared/inputs/TextInput';
 import { IModalBgProps } from 'src/shared/modals/interfaces/modal.interface';
 import ModalBg from 'src/shared/modals/ModalBg';
+import { countriesList } from 'src/shared/utils/utils.service';
+
+import { ISignUpPayload } from '../interfaces/auth.interface';
 
 const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement => {
+  const mobileOrientation = useMobileOrientation();
+  const deviceData = useDeviceData(window.navigator.userAgent);
   const [step, setStep] = useState<number>(1);
+  const [country, setCountry] = useState<string>('Select Country');
+  const [passwordType, setPasswordType] = useState<string>('password');
+  // const [profileImage, setProfileImage] = useState<string>('https://placehold.co/330x220?text=Profile+Image');
+  // const [showImageSelect, setShowImageSelect] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<ISignUpPayload>({
+    username: '',
+    password: '',
+    email: '',
+    country: '',
+    profilePicture: '',
+    browserName: deviceData.browser.name,
+    deviceType: mobileOrientation.isLandscape ? 'browser' : 'mobile'
+  });
   return (
     <ModalBg>
       <div className="relative top-[10%] mx-auto w-11/12 max-w-md rounded bg-white md:w-2/3">
@@ -60,12 +79,12 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
                 id="username"
                 name="username"
                 type="text"
-                // value={userInfo.username}
+                value={userInfo.username}
                 className="mb-5 mt-2 flex h-10 w-full items-center rounded border border-gray-300 pl-3 text-sm font-normal text-gray-600 focus:border focus:border-sky-500/50 focus:outline-none"
                 placeholder="Enter username"
-                // onChange={(event: ChangeEvent) => {
-                //   setUserInfo({ ...userInfo, username: (event.target as HTMLInputElement).value });
-                // }}
+                onChange={(event: ChangeEvent) => {
+                  setUserInfo({ ...userInfo, username: (event.target as HTMLInputElement).value });
+                }}
               />
             </div>
             <div>
@@ -76,12 +95,12 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
                 id="email"
                 name="email"
                 type="email"
-                // value={userInfo.email}
+                value={userInfo.email}
                 className="mb-5 mt-2 flex h-10 w-full items-center rounded border border-gray-300 pl-3 text-sm font-normal text-gray-600 focus:border focus:border-sky-500/50 focus:outline-none"
                 placeholder="Enter email"
-                // onChange={(event: ChangeEvent) => {
-                //   setUserInfo({ ...userInfo, email: (event.target as HTMLInputElement).value });
-                // }}
+                onChange={(event: ChangeEvent) => {
+                  setUserInfo({ ...userInfo, email: (event.target as HTMLInputElement).value });
+                }}
               />
             </div>
             <div>
@@ -90,31 +109,30 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
               </label>
               <div className="relative mb-5 mt-2">
                 <div className="absolute right-0 flex h-full cursor-pointer items-center pr-3 text-gray-600">
-                  {/* {passwordType === 'password' ? (
+                  {passwordType === 'password' ? (
                     <FaEyeSlash onClick={() => setPasswordType('text')} className="icon icon-tabler icon-tabler-info-circle" />
                   ) : (
                     <FaEye onClick={() => setPasswordType('password')} className="icon icon-tabler icon-tabler-info-circle" />
-                  )} */}
-                  <FaEye />
+                  )}
                 </div>
                 <TextInput
                   id="password"
                   name="password"
-                  //   type={passwordType}
-                  //   value={userInfo.password}
+                  type={passwordType}
+                  value={userInfo.password}
                   className="flex h-10 w-full items-center rounded border border-gray-300 pl-3 text-sm font-normal text-gray-600 focus:border focus:border-sky-500/50 focus:outline-none"
                   placeholder="Enter password"
-                  //   onChange={(event: ChangeEvent) => {
-                  //     setUserInfo({ ...userInfo, password: (event.target as HTMLInputElement).value });
-                  //   }}
+                  onChange={(event: ChangeEvent) => {
+                    setUserInfo({ ...userInfo, password: (event.target as HTMLInputElement).value });
+                  }}
                 />
               </div>
             </div>
             <Button
-              //   disabled={!userInfo.username || !userInfo.email || !userInfo.password}
-              //   className={`text-md block w-full cursor-pointer rounded bg-sky-500 px-8 py-2 text-center font-bold text-white hover:bg-sky-400 focus:outline-none ${
-              //     !userInfo.username || !userInfo.email || !userInfo.password ? 'cursor-not-allowed' : 'cursor-pointer'
-              //   }`}
+              disabled={!userInfo.username || !userInfo.email || !userInfo.password}
+              className={`text-md block w-full cursor-pointer rounded bg-sky-500 px-8 py-2 text-center font-bold text-white hover:bg-sky-400 focus:outline-none ${
+                !userInfo.username || !userInfo.email || !userInfo.password ? 'cursor-not-allowed' : 'cursor-pointer'
+              }`}
               label="Continue"
               onClick={() => setStep(2)}
             />
@@ -128,18 +146,18 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
                 Country
               </label>
               <div id="country" className="relative mb-5 mt-2">
-                {/* <Dropdown
-                //   text={country}
+                <Dropdown
+                  text={country}
                   maxHeight="200"
                   mainClassNames="absolute bg-white z-50"
                   showSearchInput={true}
-                //   values={countriesList()}
-                //   setValue={setCountry}
-                //   onClick={(item: string) => {
-                //     setCountry(item);
-                //     setUserInfo({ ...userInfo, country: item });
-                //   }}
-                /> */}
+                  values={countriesList()}
+                  setValue={setCountry}
+                  onClick={(item: string) => {
+                    setCountry(item);
+                    setUserInfo({ ...userInfo, country: item });
+                  }}
+                />
               </div>
             </div>
             <div className="relative">
