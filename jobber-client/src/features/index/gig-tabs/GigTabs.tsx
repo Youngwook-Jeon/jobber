@@ -1,11 +1,11 @@
 import { FC, ReactElement, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { categories, replaceSpacesWithDash } from 'src/shared/utils/utils.service';
 import { ISellerGig } from 'src/features/gig/interfaces/gig.interface';
+import { categories, replaceSpacesWithDash } from 'src/shared/utils/utils.service';
+import { v4 as uuidv4 } from 'uuid';
 
 const GigTabs: FC = (): ReactElement => {
   const [activeTab, setActiveTab] = useState<string>('Graphics & Design');
-  let categoryGigs: ISellerGig[] = [];
+  const categoryGigs: ISellerGig[] = [];
 
   return (
     <div className="relative m-auto mt-8 w-screen px-6 xl:container md:px-12 lg:px-6">

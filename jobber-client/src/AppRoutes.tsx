@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { useRoutes, RouteObject } from 'react-router-dom';
+import { RouteObject, useRoutes } from 'react-router-dom';
+
 import AppPage from './features/AppPage';
 import Home from './features/home/Home';
 
