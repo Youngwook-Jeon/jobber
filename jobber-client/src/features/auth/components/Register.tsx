@@ -9,10 +9,13 @@ import { IModalBgProps } from 'src/shared/modals/interfaces/modal.interface';
 import ModalBg from 'src/shared/modals/ModalBg';
 import { IResponse } from 'src/shared/shared.interface';
 import { checkImage, readAsBase64 } from 'src/shared/utils/image-utils.service';
-import { countriesList } from 'src/shared/utils/utils.service';
+import { countriesList, saveToSessionStorage } from 'src/shared/utils/utils.service';
+import { useAppDispatch } from 'src/store/store';
 
 import { useAuthSchema } from '../hooks/useAuthSchema';
 import { ISignUpPayload } from '../interfaces/auth.interface';
+import { addAuthUser } from '../reducers/auth.reducer';
+import { updateLogout } from '../reducers/logout.reducer';
 import { registerUserSchema } from '../schemes/auth.schema';
 import { useSignUpMutation } from '../services/auth.service';
 
@@ -35,7 +38,7 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
     deviceType: mobileOrientation.isLandscape ? 'browser' : 'mobile'
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const [schemaValidation] = useAuthSchema({ schema: registerUserSchema, userInfo });
   const [signUp, { isLoading }] = useSignUpMutation();
 
@@ -59,12 +62,11 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
       if (isValid) {
         const result: IResponse = await signUp(userInfo).unwrap();
         setAlertMessage('');
-        console.log(result);
-        // dispatch(addAuthUser({ authInfo: result.user }));
-        // dispatch(updateLogout(false));
+        dispatch(addAuthUser({ authInfo: result.user }));
+        dispatch(updateLogout(false));
         // dispatch(updateHeader('home'));
         // dispatch(updateCategoryContainer(true));
-        // saveToSessionStorage(JSON.stringify(true), JSON.stringify(result.user?.username));
+        saveToSessionStorage(JSON.stringify(true), JSON.stringify(result.user?.username));
       }
     } catch (error) {
       setAlertMessage(error?.data.message);
