@@ -2,24 +2,32 @@ import { Transition } from '@headlessui/react';
 import { FC, ReactElement, useRef } from 'react';
 import { FaAngleLeft, FaAngleRight, FaBars, FaRegBell, FaRegEnvelope } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { addAuthUser } from 'src/features/auth/reducers/auth.reducer';
+import { useResendEmailMutation } from 'src/features/auth/services/auth.service';
+import Banner from 'src/shared/banner/Banner';
 import Button from 'src/shared/button/Button';
+import { IResponse } from 'src/shared/shared.interface';
 // import useDetectOutsideClick from 'src/shared/hooks/useDetectOutsideClick';
 import { categories, replaceSpacesWithDash } from 'src/shared/utils/utils.service';
-// import { useAppSelector } from 'src/store/store';
-// import { IReduxState } from 'src/store/store.interface';
+import { useAppDispatch, useAppSelector } from 'src/store/store';
+import { IReduxState } from 'src/store/store.interface';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IHomeHeaderProps } from '../interfaces/header.interface';
 
 const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactElement => {
-  //   const authUser = useAppSelector((state: IReduxState) => state.authUser);
-  //   const logout = useAppSelector((state: IReduxState) => state.logout);
+  const authUser = useAppSelector((state: IReduxState) => state.authUser);
+  const logout = useAppSelector((state: IReduxState) => state.logout);
 
   const settingsDropdownRef = useRef<HTMLDivElement | null>(null);
   const messageDropdownRef = useRef<HTMLDivElement | null>(null);
   const notificationDropdownRef = useRef<HTMLDivElement | null>(null);
   const orderDropdownRef = useRef<HTMLDivElement | null>(null);
   const navElement = useRef<HTMLDivElement | null>(null);
+
+  const dispatch = useAppDispatch();
+
+  const [resendEmail] = useResendEmailMutation();
 
   //   const [isSettingsDropdown, setIsSettingsDropdown] = useDetectOutsideClick(settingsDropdownRef, false);
   //   const [isMessageDropdownOpen, setIsMessageDropdownOpen] = useDetectOutsideClick(messageDropdownRef, false);
@@ -29,12 +37,23 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
   const isMessageDropdownOpen = false;
   const isNotificationDropdownOpen = false;
   const isOrderDropdownOpen = false;
+
+  const onResendEmail = async (): Promise<void> => {
+    try {
+      const result: IResponse = await resendEmail({ userId: authUser.id as number, email: `${authUser.email}` }).unwrap();
+      dispatch(addAuthUser({ authInfo: result.user }));
+      // showSuccessToast('Email sent successfully.');
+    } catch (error) {
+      // showErrorToast('Error sending email.');
+    }
+  };
+
   return (
     <>
       {/* {openSidebar && <HomeHeaderSideBar setOpenSidebar={setOpenSidebar} />} */}
       <header>
         <nav className="navbar peer-checked:navbar-active relative z-[120] w-full border-b bg-white shadow-2xl shadow-gray-600/5 backdrop-blur dark:shadow-none">
-          {/* {!logout && authUser && !authUser.emailVerified && (
+          {!logout && authUser && !authUser.emailVerified && (
             <Banner
               bgColor="bg-warning"
               showLink={true}
@@ -42,7 +61,7 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
               text="Please verify your email before you proceed."
               onClick={onResendEmail}
             />
-          )} */}
+          )}
           <div className="m-auto px-6 xl:container md:px-12 lg:px-6">
             <div className="flex flex-wrap items-center justify-between gap-6 md:gap-0 md:py-3 lg:py-5">
               <div className="flex w-full gap-x-4 lg:w-6/12">
@@ -175,11 +194,11 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                         // onClick={toggleDropdown}
                         label={
                           <>
-                            {/* <img src={`${authUser.profilePicture}`} alt="profile" className="h-7 w-7 rounded-full object-cover" />
-                            {authUsername === authUser.username && (
+                            <img src={`${authUser.profilePicture}`} alt="profile" className="h-7 w-7 rounded-full object-cover" />
+                            {/* {authUsername === authUser.username && (
                               <span className="absolute bottom-0 left-8 h-2.5 w-2.5 rounded-full border-2 border-white bg-green-400"></span>
-                            )}
-                            <span className="flex self-center">{authUser.username}</span> */}
+                            )} */}
+                            <span className="flex self-center">{authUser.username}</span>
                           </>
                         }
                       />
