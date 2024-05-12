@@ -7,7 +7,7 @@ import { IReduxState } from 'src/store/store.interface';
 
 import { addAuthUser } from './auth/reducers/auth.reducer';
 import { useCheckCurrentUserQuery } from './auth/services/auth.service';
-import Home from './home/Home';
+import Home from './home/components/Home';
 import Index from './index/Index';
 
 const AppPage: FC = (): ReactElement => {
