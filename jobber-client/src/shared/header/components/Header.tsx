@@ -1,9 +1,11 @@
 import { FC, lazy, LazyExoticComponent, ReactElement, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import ForgotPasswordModal from 'src/features/auth/components/ForgotPassword';
 import LoginModal from 'src/features/auth/components/Login';
 import RegisterModal from 'src/features/auth/components/Register';
 import { IButtonProps } from 'src/shared/shared.interface';
+import { saveToLocalStorage } from 'src/shared/utils/utils.service';
 
 import { IHeader, IHeaderModalProps } from '../interfaces/header.interface';
 
@@ -33,11 +35,10 @@ const Header: FC<IHeader> = ({ navClass }): ReactElement => {
         />
       )}
       {showModal.forgotPassword && (
-        // <ForgotPasswordModal
-        //   onClose={() => setShowModal((item: IHeaderModalProps) => ({ ...item, forgotPassword: false }))}
-        //   onToggle={() => setShowModal((item: IHeaderModalProps) => ({ ...item, login: true, forgotPassword: false }))}
-        // />
-        <></>
+        <ForgotPasswordModal
+          onClose={() => setShowModal((item: IHeaderModalProps) => ({ ...item, forgotPassword: false }))}
+          onToggle={() => setShowModal((item: IHeaderModalProps) => ({ ...item, login: true, forgotPassword: false }))}
+        />
       )}
       {openSidebar && (
         // <HeaderSideBar setShowLoginModal={setShowModal} setShowRegisterModal={setShowModal} setOpenSidebar={setOpenSidebar} />
@@ -66,7 +67,7 @@ const Header: FC<IHeader> = ({ navClass }): ReactElement => {
                       <div
                         onClick={() => {
                           setShowModal((item: IHeaderModalProps) => ({ ...item, register: true }));
-                          // saveToLocalStorage('becomeASeller', JSON.stringify(true));
+                          saveToLocalStorage('becomeASeller', JSON.stringify(true));
                         }}
                         className="hover:text-primary dark:hover:text-primaryLight block transition md:px-4"
                       >
