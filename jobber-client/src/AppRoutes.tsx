@@ -4,6 +4,7 @@ import { RouteObject, useRoutes } from 'react-router-dom';
 import AppPage from './features/AppPage';
 import ConfirmEmail from './features/auth/components/ConfirmEmail';
 import ResetPassword from './features/auth/components/ResetPassword';
+import BuyerDashboard from './features/buyer/components/Dashboard';
 import Error from './features/error/Error';
 import Home from './features/home/components/Home';
 import ProtectedRoute from './features/ProtectedRoute';
@@ -43,6 +44,18 @@ const AppRouter: FC = () => {
           <ProtectedRoute>
             <Layout backgroundColor="#ffffff">
               <Home />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/users/:username/:buyerId/orders',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <BuyerDashboard />
             </Layout>
           </ProtectedRoute>
         </Suspense>
