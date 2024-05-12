@@ -1,23 +1,30 @@
-import { ChangeEvent, FC, ReactElement, useState } from 'react';
+import { ChangeEvent, FC, ReactElement, useRef, useState } from 'react';
 import { useDeviceData, useMobileOrientation } from 'react-device-detect';
-import { FaChevronLeft, FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
+import { FaCamera, FaChevronLeft, FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
+import Alert from 'src/shared/alert/Alert';
 import Button from 'src/shared/button/Button';
 import Dropdown from 'src/shared/dropdown/Dropdown';
 import TextInput from 'src/shared/inputs/TextInput';
 import { IModalBgProps } from 'src/shared/modals/interfaces/modal.interface';
 import ModalBg from 'src/shared/modals/ModalBg';
+import { IResponse } from 'src/shared/shared.interface';
+import { checkImage, readAsBase64 } from 'src/shared/utils/image-utils.service';
 import { countriesList } from 'src/shared/utils/utils.service';
 
+import { useAuthSchema } from '../hooks/useAuthSchema';
 import { ISignUpPayload } from '../interfaces/auth.interface';
+import { registerUserSchema } from '../schemes/auth.schema';
+import { useSignUpMutation } from '../services/auth.service';
 
 const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement => {
   const mobileOrientation = useMobileOrientation();
   const deviceData = useDeviceData(window.navigator.userAgent);
+  const [alertMessage, setAlertMessage] = useState<string>('');
   const [step, setStep] = useState<number>(1);
   const [country, setCountry] = useState<string>('Select Country');
   const [passwordType, setPasswordType] = useState<string>('password');
-  // const [profileImage, setProfileImage] = useState<string>('https://placehold.co/330x220?text=Profile+Image');
-  // const [showImageSelect, setShowImageSelect] = useState<boolean>(false);
+  const [profileImage, setProfileImage] = useState<string>('https://placehold.co/330x220?text=Profile+Image');
+  const [showImageSelect, setShowImageSelect] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<ISignUpPayload>({
     username: '',
     password: '',
@@ -27,6 +34,42 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
     browserName: deviceData.browser.name,
     deviceType: mobileOrientation.isLandscape ? 'browser' : 'mobile'
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  // const dispatch = useAppDispatch();
+  const [schemaValidation] = useAuthSchema({ schema: registerUserSchema, userInfo });
+  const [signUp, { isLoading }] = useSignUpMutation();
+
+  const handleFileChange = async (event: ChangeEvent): Promise<void> => {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    if (target.files) {
+      const file: File = target.files[0];
+      const isValid = checkImage(file, 'image');
+      if (isValid) {
+        const dataImage: string | ArrayBuffer | null = await readAsBase64(file);
+        setProfileImage(`${dataImage}`);
+        setUserInfo({ ...userInfo, profilePicture: `${dataImage}` });
+      }
+      setShowImageSelect(false);
+    }
+  };
+
+  const onRegisterUser = async (): Promise<void> => {
+    try {
+      const isValid: boolean = await schemaValidation();
+      if (isValid) {
+        const result: IResponse = await signUp(userInfo).unwrap();
+        setAlertMessage('');
+        console.log(result);
+        // dispatch(addAuthUser({ authInfo: result.user }));
+        // dispatch(updateLogout(false));
+        // dispatch(updateHeader('home'));
+        // dispatch(updateCategoryContainer(true));
+        // saveToSessionStorage(JSON.stringify(true), JSON.stringify(result.user?.username));
+      }
+    } catch (error) {
+      setAlertMessage(error?.data.message);
+    }
+  };
   return (
     <ModalBg>
       <div className="relative top-[10%] mx-auto w-11/12 max-w-md rounded bg-white md:w-2/3">
@@ -67,7 +110,7 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
             </li>
           </ol>
         </div>
-        {/* <div className="px-5">{alertMessage && <Alert type="error" message={alertMessage} />}</div> */}
+        <div className="px-5">{alertMessage && <Alert type="error" message={alertMessage} />}</div>
 
         {step === 1 && (
           <div className="relative px-5 py-5">
@@ -165,11 +208,11 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
                 Profile Picture
               </label>
               <div
-                // onMouseEnter={() => setShowImageSelect(true)}
-                // onMouseLeave={() => setShowImageSelect(false)}
+                onMouseEnter={() => setShowImageSelect(true)}
+                onMouseLeave={() => setShowImageSelect(false)}
                 className="relative mb-5 mt-2 w-[20%] cursor-pointer"
               >
-                {/* {profileImage && (
+                {profileImage && (
                   <img
                     id="profilePicture"
                     src={profileImage}
@@ -179,8 +222,8 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
                 )}
                 {!profileImage && (
                   <div className="left-0 top-0 flex h-20 w-20 cursor-pointer justify-center rounded-full bg-[#dee1e7]"></div>
-                )} */}
-                {/* {showImageSelect && (
+                )}
+                {showImageSelect && (
                   <div
                     onClick={() => fileInputRef.current?.click()}
                     className="absolute left-0 top-0 flex h-20 w-20 cursor-pointer justify-center rounded-full bg-[#dee1e7]"
@@ -199,16 +242,16 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
                     }
                   }}
                   onChange={handleFileChange}
-                /> */}
+                />
               </div>
             </div>
             <Button
-            //   disabled={!userInfo.country || !userInfo.profilePicture}
-            //   className={`text-md block w-full cursor-pointer rounded bg-sky-500 px-8 py-2 text-center font-bold text-white hover:bg-sky-400 focus:outline-none ${
-            //     !userInfo.country || !userInfo.profilePicture ? 'cursor-not-allowed' : 'cursor-pointer'
-            //   }`}
-            //   label={`${isLoading ? 'SIGNUP IN PROGRESS...' : 'SIGNUP'}`}
-            //   onClick={onRegisterUser}
+              disabled={!userInfo.country || !userInfo.profilePicture}
+              className={`text-md block w-full cursor-pointer rounded bg-sky-500 px-8 py-2 text-center font-bold text-white hover:bg-sky-400 focus:outline-none ${
+                !userInfo.country || !userInfo.profilePicture ? 'cursor-not-allowed' : 'cursor-pointer'
+              }`}
+              label={`${isLoading ? 'SIGNUP IN PROGRESS...' : 'SIGNUP'}`}
+              onClick={onRegisterUser}
             />
           </div>
         )}

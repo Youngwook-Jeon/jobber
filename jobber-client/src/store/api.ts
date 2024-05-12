@@ -1,7 +1,8 @@
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { getDataFromSessionStorage } from 'src/shared/utils/utils.service';
 
-const BASE_ENDPOINT = import.meta.env.VITE_BASE_ENDPOINT;
+// const BASE_ENDPOINT = import.meta.env.VITE_BASE_ENDPOINT;
+const BASE_ENDPOINT = 'http://localhost:4000';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${BASE_ENDPOINT}/api/gateway/v1`,

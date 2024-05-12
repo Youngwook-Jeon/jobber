@@ -1,4 +1,5 @@
 import { combineReducers, configureStore, EnhancedStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
 import { useDispatch, useSelector } from 'react-redux';
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -32,8 +33,9 @@ export const store: EnhancedStore = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
       }
-    })
+    }).concat(api.middleware)
 });
+setupListeners(store.dispatch);
 
 export type AppDispatch = typeof store.dispatch;
 

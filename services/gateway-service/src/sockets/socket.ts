@@ -1,13 +1,13 @@
-import { IMessageDocument, IOrderDocument, IOrderNotifcation, winstonLogger } from '@youngwook-jeon/jobber-shared';
+// import { IMessageDocument, IOrderDocument, IOrderNotifcation, winstonLogger } from '@youngwook-jeon/jobber-shared';
 import { Server, Socket } from 'socket.io';
-import { io, Socket as SocketClient } from 'socket.io-client';
-import { Logger } from 'winston';
-import { config } from '@gateway/config';
+// import { io, Socket as SocketClient } from 'socket.io-client';
+// import { Logger } from 'winston';
+// import { config } from '@gateway/config';
 import { GatewayCache } from '@gateway/redis/gateway.cache';
 
-const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'gatewaySocket', 'debug');
-let chatSocketClient: SocketClient;
-let orderSocketClient: SocketClient;
+// const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'gatewaySocket', 'debug');
+// let chatSocketClient: SocketClient;
+// let orderSocketClient: SocketClient;
 
 export class SocketIOAppHandler {
   private io: Server;
@@ -45,59 +45,59 @@ export class SocketIOAppHandler {
     });
   }
 
-  private chatSocketServiceIOConnections(): void {
-    chatSocketClient = io(`${config.MESSAGE_BASE_URL}`, {
-      transports: ['websocket', 'polling'],
-      secure: true
-    });
+  // private chatSocketServiceIOConnections(): void {
+  //   chatSocketClient = io(`${config.MESSAGE_BASE_URL}`, {
+  //     transports: ['websocket', 'polling'],
+  //     secure: true
+  //   });
 
-    chatSocketClient.on('connect', () => {
-      log.info('ChatService socket connected');
-    });
+  //   chatSocketClient.on('connect', () => {
+  //     log.info('ChatService socket connected');
+  //   });
 
-    chatSocketClient.on('disconnect', (reason: SocketClient.DisconnectReason) => {
-      log.log('error', 'ChatSocket disconnect reason:', reason);
-      chatSocketClient.connect();
-    });
+  //   chatSocketClient.on('disconnect', (reason: SocketClient.DisconnectReason) => {
+  //     log.log('error', 'ChatSocket disconnect reason:', reason);
+  //     chatSocketClient.connect();
+  //   });
 
-    chatSocketClient.on('connect_error', (error: Error) => {
-      log.log('error', 'ChatService socket connection error:', error);
-      chatSocketClient.connect();
-    });
+  //   chatSocketClient.on('connect_error', (error: Error) => {
+  //     log.log('error', 'ChatService socket connection error:', error);
+  //     chatSocketClient.connect();
+  //   });
 
-    // custom events
-    chatSocketClient.on('message received', (data: IMessageDocument) => {
-      this.io.emit('message received', data);
-    });
+  //   // custom events
+  //   chatSocketClient.on('message received', (data: IMessageDocument) => {
+  //     this.io.emit('message received', data);
+  //   });
 
-    chatSocketClient.on('message updated', (data: IMessageDocument) => {
-      this.io.emit('message updated', data);
-    });
-  }
+  //   chatSocketClient.on('message updated', (data: IMessageDocument) => {
+  //     this.io.emit('message updated', data);
+  //   });
+  // }
 
-  private orderSocketServiceIOConnections(): void {
-    orderSocketClient = io(`${config.ORDER_BASE_URL}`, {
-      transports: ['websocket', 'polling'],
-      secure: true
-    });
+  // private orderSocketServiceIOConnections(): void {
+  //   orderSocketClient = io(`${config.ORDER_BASE_URL}`, {
+  //     transports: ['websocket', 'polling'],
+  //     secure: true
+  //   });
 
-    orderSocketClient.on('connect', () => {
-      log.info('OrderService socket connected');
-    });
+  //   orderSocketClient.on('connect', () => {
+  //     log.info('OrderService socket connected');
+  //   });
 
-    orderSocketClient.on('disconnect', (reason: SocketClient.DisconnectReason) => {
-      log.log('error', 'OrderSocket disconnect reason:', reason);
-      orderSocketClient.connect();
-    });
+  //   orderSocketClient.on('disconnect', (reason: SocketClient.DisconnectReason) => {
+  //     log.log('error', 'OrderSocket disconnect reason:', reason);
+  //     orderSocketClient.connect();
+  //   });
 
-    orderSocketClient.on('connect_error', (error: Error) => {
-      log.log('error', 'OrderService socket connection error:', error);
-      orderSocketClient.connect();
-    });
+  //   orderSocketClient.on('connect_error', (error: Error) => {
+  //     log.log('error', 'OrderService socket connection error:', error);
+  //     orderSocketClient.connect();
+  //   });
 
-    // custom event
-    orderSocketClient.on('order notification', (order: IOrderDocument, notification: IOrderNotifcation) => {
-      this.io.emit('order notification', order, notification);
-    });
-  }
+  //   // custom event
+  //   orderSocketClient.on('order notification', (order: IOrderDocument, notification: IOrderNotifcation) => {
+  //     this.io.emit('order notification', order, notification);
+  //   });
+  // }
 }
