@@ -1,6 +1,7 @@
 import { FC, ReactElement, useCallback, useEffect, useState } from 'react';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import HomeHeader from 'src/shared/header/components/HomeHeader';
-import { saveToSessionStorage } from 'src/shared/utils/utils.service';
+import { applicationLogout, saveToSessionStorage } from 'src/shared/utils/utils.service';
 import { useAppDispatch, useAppSelector } from 'src/store/store';
 import { IReduxState } from 'src/store/store.interface';
 
@@ -15,8 +16,8 @@ const AppPage: FC = (): ReactElement => {
   const showCategoryContainer = true;
   const [tokenIsValid, setTokenIsValid] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: currentUserData, isError } = useCheckCurrentUserQuery(undefined, { skip: authUser.id === null });
 
   const checkUser = useCallback(async () => {
@@ -40,10 +41,17 @@ const AppPage: FC = (): ReactElement => {
     }
   }, [currentUserData, dispatch, appLogout, authUser.username]);
 
+  const logoutUser = useCallback(async () => {
+    if ((!currentUserData && appLogout) || isError) {
+      setTokenIsValid(false);
+      applicationLogout(dispatch, navigate);
+    }
+  }, [currentUserData, dispatch, navigate, appLogout, isError]);
+
   useEffect(() => {
     checkUser();
-    // logoutUser();
-  }, [checkUser]);
+    logoutUser();
+  }, [checkUser, logoutUser]);
 
   if (authUser) {
     return !tokenIsValid && !authUser.id ? (

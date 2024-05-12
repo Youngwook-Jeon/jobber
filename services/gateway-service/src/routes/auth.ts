@@ -4,7 +4,7 @@ import { SignIn } from '@gateway/controllers/auth/signin';
 import { VerifyEmail } from '@gateway/controllers/auth/verify-email';
 import { Password } from '@gateway/controllers/auth/password';
 import { AuthSeed } from '@gateway/controllers/auth/seed';
-// import { Signout } from '@gateway/controllers/auth/signout';
+import { Signout } from '@gateway/controllers/auth/signout';
 // import { VerifyOTP } from '@gateway/controllers/auth/verify-otp';
 
 class AuthRoutes {
@@ -17,7 +17,7 @@ class AuthRoutes {
   public routes(): Router {
     this.router.post('/auth/signup', SignUp.prototype.create);
     this.router.post('/auth/signin', SignIn.prototype.read);
-    // this.router.post('/auth/signout', Signout.prototype.update);
+    this.router.post('/auth/signout', Signout.prototype.update);
     this.router.put('/auth/verify-email', VerifyEmail.prototype.update);
     this.router.put('/auth/forgot-password', Password.prototype.forgotPassword);
     this.router.put('/auth/reset-password/:token', Password.prototype.resetPassword);
