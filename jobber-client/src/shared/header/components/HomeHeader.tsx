@@ -4,20 +4,24 @@ import { FaAngleLeft, FaAngleRight, FaBars, FaRegBell, FaRegEnvelope } from 'rea
 import { Link } from 'react-router-dom';
 import { addAuthUser } from 'src/features/auth/reducers/auth.reducer';
 import { useResendEmailMutation } from 'src/features/auth/services/auth.service';
+import { ISellerDocument } from 'src/features/seller/interfaces/seller.interface';
 import Banner from 'src/shared/banner/Banner';
 import Button from 'src/shared/button/Button';
+import useDetectOutsideClick from 'src/shared/hooks/useDetectOutsideClick';
 import { IResponse } from 'src/shared/shared.interface';
-// import useDetectOutsideClick from 'src/shared/hooks/useDetectOutsideClick';
 import { categories, replaceSpacesWithDash } from 'src/shared/utils/utils.service';
 import { useAppDispatch, useAppSelector } from 'src/store/store';
 import { IReduxState } from 'src/store/store.interface';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IHomeHeaderProps } from '../interfaces/header.interface';
+import SettingsDropdown from './SettingsDropdown';
 
 const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactElement => {
   const authUser = useAppSelector((state: IReduxState) => state.authUser);
+  // const seller = useAppSelector((state: IReduxState) => state.seller);
   const logout = useAppSelector((state: IReduxState) => state.logout);
+  const buyer = useAppSelector((state: IReduxState) => state.buyer);
 
   const settingsDropdownRef = useRef<HTMLDivElement | null>(null);
   const messageDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -29,11 +33,10 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
 
   const [resendEmail] = useResendEmailMutation();
 
-  //   const [isSettingsDropdown, setIsSettingsDropdown] = useDetectOutsideClick(settingsDropdownRef, false);
-  //   const [isMessageDropdownOpen, setIsMessageDropdownOpen] = useDetectOutsideClick(messageDropdownRef, false);
-  //   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] = useDetectOutsideClick(notificationDropdownRef, false);
-  //   const [isOrderDropdownOpen, setIsOrderDropdownOpen] = useDetectOutsideClick(orderDropdownRef, false);
-  const isSettingsDropdown = false;
+  const [isSettingsDropdown, setIsSettingsDropdown] = useDetectOutsideClick(settingsDropdownRef, false);
+  // const [isMessageDropdownOpen, setIsMessageDropdownOpen] = useDetectOutsideClick(messageDropdownRef, false);
+  // const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] = useDetectOutsideClick(notificationDropdownRef, false);
+  // const [isOrderDropdownOpen, setIsOrderDropdownOpen] = useDetectOutsideClick(orderDropdownRef, false);
   const isMessageDropdownOpen = false;
   const isNotificationDropdownOpen = false;
   const isOrderDropdownOpen = false;
@@ -47,6 +50,54 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
       // showErrorToast('Error sending email.');
     }
   };
+
+  const toggleDropdown = (): void => {
+    setIsSettingsDropdown(!isSettingsDropdown);
+    // setIsMessageDropdownOpen(false);
+    // setIsNotificationDropdownOpen(false);
+    // setIsOrderDropdownOpen(false);
+  };
+
+  // const toggleMessageDropdown = (): void => {
+  //   setIsMessageDropdownOpen(!isMessageDropdownOpen);
+  //   setIsNotificationDropdownOpen(false);
+  //   setIsOrderDropdownOpen(false);
+  //   setIsSettingsDropdown(false);
+  //   dispatch(updateHeader('home'));
+  //   dispatch(updateCategoryContainer(true));
+  // };
+
+  // const toggleOrdersDropdown = (): void => {
+  //   setIsOrderDropdownOpen(!isOrderDropdownOpen);
+  //   setIsMessageDropdownOpen(false);
+  //   setIsNotificationDropdownOpen(false);
+  //   setIsSettingsDropdown(false);
+  //   dispatch(updateHeader('home'));
+  //   dispatch(updateCategoryContainer(true));
+  // };
+
+  // const toggleNotificationDropdown = (): void => {
+  //   setIsNotificationDropdownOpen(!isNotificationDropdownOpen);
+  //   setIsOrderDropdownOpen(false);
+  //   setIsMessageDropdownOpen(false);
+  //   setIsSettingsDropdown(false);
+  //   dispatch(updateHeader('home'));
+  //   dispatch(updateCategoryContainer(true));
+  // };
+
+  // const slideLeft = (): void => {
+  //   if (navElement.current) {
+  //     const maxScrollLeft = navElement.current.scrollWidth + navElement.current.clientWidth; // maximum scroll position
+  //     navElement.current.scrollLeft = navElement.current.scrollLeft < maxScrollLeft ? navElement.current.scrollLeft - 1000 : maxScrollLeft;
+  //   }
+  // };
+
+  // const slideRight = (): void => {
+  //   if (navElement.current) {
+  //     const maxScrollLeft = navElement.current.scrollWidth - navElement.current.clientWidth; // maximum scroll position
+  //     navElement.current.scrollLeft = navElement.current.scrollLeft < maxScrollLeft ? navElement.current.scrollLeft + 1000 : maxScrollLeft;
+  //   }
+  // };
 
   return (
     <>
@@ -99,6 +150,7 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                       <Button
                         className="px-4"
                         // onClick={toggleNotificationDropdown}
+                        onClick={() => {}}
                         label={
                           <>
                             <FaRegBell />
@@ -118,15 +170,16 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                       >
-                        <div className="absolute right-0 mt-5 w-96">
-                          {/* <NotificationDropdown setIsNotificationDropdownOpen={setIsNotificationDropdownOpen} /> */}
-                        </div>
+                        {/* <div className="absolute right-0 mt-5 w-96">
+                          <NotificationDropdown setIsNotificationDropdownOpen={setIsNotificationDropdownOpen} />
+                        </div> */}
                       </Transition>
                     </li>
                     <li className="relative z-50 flex cursor-pointer items-center">
                       <Button
                         className="relative px-4"
                         // onClick={toggleMessageDropdown}
+                        onClick={() => {}}
                         label={
                           <>
                             <FaRegEnvelope />
@@ -146,14 +199,15 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                       >
-                        <div className="absolute right-0 mt-5 w-96">
-                          {/* <MessageDropdown setIsMessageDropdownOpen={setIsMessageDropdownOpen} /> */}
-                        </div>
+                        {/* <div className="absolute right-0 mt-5 w-96">
+                          <MessageDropdown setIsMessageDropdownOpen={setIsMessageDropdownOpen} />
+                        </div> */}
                       </Transition>
                     </li>
                     <li
                       className="relative z-50 flex cursor-pointer items-center"
                       //  onClick={toggleOrdersDropdown}
+                      onClick={() => {}}
                     >
                       <Button
                         className="px-3"
@@ -173,12 +227,12 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                       >
-                        <div className="absolute right-0 mt-5 w-96">
-                          {/* <OrderDropdown buyer={buyer} setIsOrderDropdownOpen={setIsOrderDropdownOpen} /> */}
-                        </div>
+                        {/* <div className="absolute right-0 mt-5 w-96">
+                          <OrderDropdown buyer={buyer} setIsOrderDropdownOpen={setIsOrderDropdownOpen} />
+                        </div> */}
                       </Transition>
                     </li>
-                    {/* {buyer && !buyer.isSeller && (
+                    {buyer && !buyer.isSeller && (
                       <li className="relative flex items-center">
                         <Link
                           to="/seller_onboarding"
@@ -187,11 +241,11 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                           <span>Become a Seller</span>
                         </Link>
                       </li>
-                    )} */}
+                    )}
                     <li className="relative z-50 flex cursor-pointer items-center">
                       <Button
                         className="relative flex gap-2 px-3 text-base font-medium"
-                        // onClick={toggleDropdown}
+                        onClick={toggleDropdown}
                         label={
                           <>
                             <img src={`${authUser.profilePicture}`} alt="profile" className="h-7 w-7 rounded-full object-cover" />
@@ -220,6 +274,13 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                             type="buyer"
                             setIsDropdownOpen={setIsSettingsDropdown}
                           /> */}
+                          <SettingsDropdown
+                            seller={{} as ISellerDocument}
+                            buyer={buyer}
+                            authUser={authUser}
+                            type="buyer"
+                            setIsDropdownOpen={setIsSettingsDropdown}
+                          />
                         </div>
                       </Transition>
                     </li>

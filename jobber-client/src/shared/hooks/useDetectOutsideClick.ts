@@ -9,17 +9,16 @@ const useDetectOutsideClick = (
   const handleClick = useCallback(
     (event: MouseEvent): void => {
       if (ref.current !== null && !ref.current.contains(event.target as HTMLDivElement)) {
-        setIsActive(!isActive);
+        setIsActive((prevState) => !prevState);
       }
     },
-    [isActive, ref]
+    [ref]
   );
 
   useEffect(() => {
     if (isActive) {
       window.addEventListener('click', handleClick);
     }
-
     return () => {
       window.removeEventListener('click', handleClick);
     };
