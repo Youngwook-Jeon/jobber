@@ -8,6 +8,8 @@ import BuyerDashboard from './features/buyer/components/Dashboard';
 import Error from './features/error/Error';
 import Home from './features/home/components/Home';
 import ProtectedRoute from './features/ProtectedRoute';
+import AddSeller from './features/seller/components/add/AddSeller';
+import CurrentSellerProfile from './features/seller/components/profile/CurrentSellerProfile';
 
 const Layout = ({ backgroundColor = '#fff', children }: { backgroundColor: string; children: ReactNode }): JSX.Element => (
   <div style={{ backgroundColor }} className="flex flex-grow">
@@ -56,6 +58,30 @@ const AppRouter: FC = () => {
           <ProtectedRoute>
             <Layout backgroundColor="#ffffff">
               <BuyerDashboard />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/seller_onboarding',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <AddSeller />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/seller_profile/:username/:sellerId/edit',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <CurrentSellerProfile />
             </Layout>
           </ProtectedRoute>
         </Suspense>

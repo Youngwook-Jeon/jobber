@@ -4,7 +4,6 @@ import { FaAngleLeft, FaAngleRight, FaBars, FaRegBell, FaRegEnvelope } from 'rea
 import { Link } from 'react-router-dom';
 import { addAuthUser } from 'src/features/auth/reducers/auth.reducer';
 import { useResendEmailMutation } from 'src/features/auth/services/auth.service';
-import { ISellerDocument } from 'src/features/seller/interfaces/seller.interface';
 import Banner from 'src/shared/banner/Banner';
 import Button from 'src/shared/button/Button';
 import useDetectOutsideClick from 'src/shared/hooks/useDetectOutsideClick';
@@ -19,7 +18,7 @@ import SettingsDropdown from './SettingsDropdown';
 
 const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactElement => {
   const authUser = useAppSelector((state: IReduxState) => state.authUser);
-  // const seller = useAppSelector((state: IReduxState) => state.seller);
+  const seller = useAppSelector((state: IReduxState) => state.seller);
   const logout = useAppSelector((state: IReduxState) => state.logout);
   const buyer = useAppSelector((state: IReduxState) => state.buyer);
 
@@ -267,15 +266,8 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                         leaveTo="opacity-0 translate-y-1"
                       >
                         <div className="absolute -right-48 z-50 mt-5 w-96">
-                          {/* <SettingsDropdown
-                            seller={seller}
-                            buyer={buyer}
-                            authUser={authUser}
-                            type="buyer"
-                            setIsDropdownOpen={setIsSettingsDropdown}
-                          /> */}
                           <SettingsDropdown
-                            seller={{} as ISellerDocument}
+                            seller={seller}
                             buyer={buyer}
                             authUser={authUser}
                             type="buyer"
