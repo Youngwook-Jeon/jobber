@@ -3,9 +3,9 @@ import axios, { AxiosResponse } from 'axios';
 import countries, { LocalizedCountryNames } from 'i18n-iso-countries';
 import enLocale from 'i18n-iso-countries/langs/en.json';
 import { filter } from 'lodash';
-// import millify from 'millify';
+import millify from 'millify';
 import { NavigateFunction } from 'react-router-dom';
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { logout } from 'src/features/auth/reducers/logout.reducer';
 import { authApi } from 'src/features/auth/services/auth.service';
 import { IOrderDocument } from 'src/features/order/interfaces/order.interface';
@@ -148,12 +148,12 @@ export const yearsList = (maxOffset: number): string[] => {
   return years;
 };
 
-// export const shortenLargeNumbers = (data: number | undefined): string => {
-//   if (data === undefined) {
-//     return '0';
-//   }
-//   return millify(data, { precision: 0 });
-// };
+export const shortenLargeNumbers = (data: number | undefined): string => {
+  if (data === undefined) {
+    return '0';
+  }
+  return millify(data, { precision: 0 });
+};
 
 export const rating = (num: number): number => {
   if (num) {
@@ -162,31 +162,31 @@ export const rating = (num: number): number => {
   return 0.0;
 };
 
-// export const showSuccessToast = (message: string): void => {
-//   toast.success(message, {
-//     position: 'bottom-right',
-//     autoClose: 3000,
-//     hideProgressBar: false,
-//     closeOnClick: true,
-//     pauseOnHover: false,
-//     draggable: false,
-//     progress: undefined,
-//     theme: 'colored'
-//   });
-// };
+export const showSuccessToast = (message: string): void => {
+  toast.success(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+    progress: undefined,
+    theme: 'colored'
+  });
+};
 
-// export const showErrorToast = (message: string): void => {
-//   toast.error(message, {
-//     position: 'bottom-right',
-//     autoClose: 3000,
-//     hideProgressBar: false,
-//     closeOnClick: true,
-//     pauseOnHover: false,
-//     draggable: false,
-//     progress: undefined,
-//     theme: 'colored'
-//   });
-// };
+export const showErrorToast = (message: string): void => {
+  toast.error(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: false,
+    progress: undefined,
+    theme: 'colored'
+  });
+};
 
 export const reactQuillUtils = () => {
   const modules = {

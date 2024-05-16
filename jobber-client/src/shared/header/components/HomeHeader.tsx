@@ -8,7 +8,7 @@ import Banner from 'src/shared/banner/Banner';
 import Button from 'src/shared/button/Button';
 import useDetectOutsideClick from 'src/shared/hooks/useDetectOutsideClick';
 import { IResponse } from 'src/shared/shared.interface';
-import { categories, replaceSpacesWithDash } from 'src/shared/utils/utils.service';
+import { categories, replaceSpacesWithDash, showErrorToast, showSuccessToast } from 'src/shared/utils/utils.service';
 import { useAppDispatch, useAppSelector } from 'src/store/store';
 import { IReduxState } from 'src/store/store.interface';
 import { v4 as uuidv4 } from 'uuid';
@@ -44,9 +44,9 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
     try {
       const result: IResponse = await resendEmail({ userId: authUser.id as number, email: `${authUser.email}` }).unwrap();
       dispatch(addAuthUser({ authInfo: result.user }));
-      // showSuccessToast('Email sent successfully.');
+      showSuccessToast('Email sent successfully.');
     } catch (error) {
-      // showErrorToast('Error sending email.');
+      showErrorToast('Error sending email.');
     }
   };
 

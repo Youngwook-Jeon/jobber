@@ -10,6 +10,7 @@ import Home from './features/home/components/Home';
 import ProtectedRoute from './features/ProtectedRoute';
 import AddSeller from './features/seller/components/add/AddSeller';
 import CurrentSellerProfile from './features/seller/components/profile/CurrentSellerProfile';
+// import SellerProfile from './features/seller/components/profile/SellerProfile';
 
 const Layout = ({ backgroundColor = '#fff', children }: { backgroundColor: string; children: ReactNode }): JSX.Element => (
   <div style={{ backgroundColor }} className="flex flex-grow">
@@ -87,6 +88,18 @@ const AppRouter: FC = () => {
         </Suspense>
       )
     },
+    // {
+    //   path: '/seller_profile/:username/:sellerId/view',
+    //   element: (
+    //     <Suspense>
+    //       <ProtectedRoute>
+    //         <Layout backgroundColor="#ffffff">
+    //           <SellerProfile />
+    //         </Layout>
+    //       </ProtectedRoute>
+    //     </Suspense>
+    //   )
+    // },
     {
       path: '*',
       element: (
