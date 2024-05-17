@@ -202,3 +202,29 @@ services:
   #   depends_on:
   #     - elasticsearch
   #     - mongodb
+
+  # chat:
+  #   container_name: jobber_chat
+  #   build:
+  #     context: ../services/chat-service
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 4005:4005
+  #   env_file: ../services/chat-service/.env
+  #   environment:
+  #     - ENABLE_APM=0
+  #     - DATABASE_URL=mongodb://jobber_mongodb:27017/jobber-chat
+  #     - GATEWAY_JWT_TOKEN=9931ddd9952b63de3c744ed795543b4e
+  #     - JWT_TOKEN=8db8f85991bb28f45ac0107f2a1b349c
+  #     - NODE_ENV=development
+  #     - API_GATEWAY_URL=http://jobber_gateway:4000
+  #     - RABBITMQ_ENDPOINT=amqp://jobber:password@jobber_rabbitmq:5672
+  #     - CLOUD_NAME=dtdotzymf
+  #     - CLOUD_API_KEY=376978894513188
+  #     - CLOUD_API_SECRET=${CLOUD_API_SECRET}
+  #     - ELASTIC_SEARCH_URL=http://jobber_elasticsearch:9200
+  #     - ELASTIC_APM_SERVER_URL=http://localhost:8200
+  #     - ELASTIC_APM_SECRET_TOKEN=
+  #   depends_on:
+  #     - elasticsearch
+  #     - mongodb
