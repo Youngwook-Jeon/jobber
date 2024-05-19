@@ -6,6 +6,9 @@ import ConfirmEmail from './features/auth/components/ConfirmEmail';
 import ResetPassword from './features/auth/components/ResetPassword';
 import BuyerDashboard from './features/buyer/components/Dashboard';
 import Error from './features/error/Error';
+import AddGig from './features/gig/components/gig/AddGig';
+import EditGig from './features/gig/components/gig/EditGig';
+import GigView from './features/gig/components/view/GigView';
 import Home from './features/home/components/Home';
 import ProtectedRoute from './features/ProtectedRoute';
 import AddSeller from './features/seller/components/add/AddSeller';
@@ -129,6 +132,42 @@ const AppRouter: FC = () => {
           element: <ManageEarnings />
         }
       ]
+    },
+    {
+      path: '/manage_gigs/new/:sellerId',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <AddGig />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/manage_gigs/edit/:gigId',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <EditGig />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/gig/:username/:title/:sellerId/:gigId/view',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <GigView />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
     },
     {
       path: '*',
