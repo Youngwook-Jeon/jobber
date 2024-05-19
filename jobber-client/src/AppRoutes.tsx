@@ -9,8 +9,12 @@ import Error from './features/error/Error';
 import Home from './features/home/components/Home';
 import ProtectedRoute from './features/ProtectedRoute';
 import AddSeller from './features/seller/components/add/AddSeller';
+import ManageEarnings from './features/seller/components/dashboard/ManageEarnings';
+import ManageOrders from './features/seller/components/dashboard/ManageOrders';
+import Seller from './features/seller/components/dashboard/Seller';
+import SellerDashboard from './features/seller/components/dashboard/SellerDashboard';
 import CurrentSellerProfile from './features/seller/components/profile/CurrentSellerProfile';
-// import SellerProfile from './features/seller/components/profile/SellerProfile';
+import SellerProfile from './features/seller/components/profile/SellerProfile';
 
 const Layout = ({ backgroundColor = '#fff', children }: { backgroundColor: string; children: ReactNode }): JSX.Element => (
   <div style={{ backgroundColor }} className="flex flex-grow">
@@ -88,18 +92,44 @@ const AppRouter: FC = () => {
         </Suspense>
       )
     },
-    // {
-    //   path: '/seller_profile/:username/:sellerId/view',
-    //   element: (
-    //     <Suspense>
-    //       <ProtectedRoute>
-    //         <Layout backgroundColor="#ffffff">
-    //           <SellerProfile />
-    //         </Layout>
-    //       </ProtectedRoute>
-    //     </Suspense>
-    //   )
-    // },
+    {
+      path: '/seller_profile/:username/:sellerId/view',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <SellerProfile />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/:username/:sellerId',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <Seller />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      ),
+      children: [
+        {
+          path: 'seller_dashboard',
+          element: <SellerDashboard />
+        },
+        {
+          path: 'manage_orders',
+          element: <ManageOrders />
+        },
+        {
+          path: 'manage_earnings',
+          element: <ManageEarnings />
+        }
+      ]
+    },
     {
       path: '*',
       element: (

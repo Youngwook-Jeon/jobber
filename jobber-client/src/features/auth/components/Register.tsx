@@ -4,6 +4,8 @@ import { FaCamera, FaChevronLeft, FaEye, FaEyeSlash, FaTimes } from 'react-icons
 import Alert from 'src/shared/alert/Alert';
 import Button from 'src/shared/button/Button';
 import Dropdown from 'src/shared/dropdown/Dropdown';
+import { updateCategoryContainer } from 'src/shared/header/reducers/category.reducer';
+import { updateHeader } from 'src/shared/header/reducers/header.reducer';
 import TextInput from 'src/shared/inputs/TextInput';
 import { IModalBgProps } from 'src/shared/modals/interfaces/modal.interface';
 import ModalBg from 'src/shared/modals/ModalBg';
@@ -64,8 +66,8 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
         setAlertMessage('');
         dispatch(addAuthUser({ authInfo: result.user }));
         dispatch(updateLogout(false));
-        // dispatch(updateHeader('home'));
-        // dispatch(updateCategoryContainer(true));
+        dispatch(updateHeader('home'));
+        dispatch(updateCategoryContainer(true));
         saveToSessionStorage(JSON.stringify(true), JSON.stringify(result.user?.username));
       }
     } catch (error) {

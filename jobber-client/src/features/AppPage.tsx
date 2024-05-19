@@ -18,7 +18,7 @@ import { useGetSellerByUsernameQuery } from './seller/services/seller.service';
 const AppPage: FC = (): ReactElement => {
   const authUser = useAppSelector((state: IReduxState) => state.authUser);
   const appLogout = useAppSelector((state: IReduxState) => state.logout);
-  const showCategoryContainer = true;
+  const showCategoryContainer = useAppSelector((state: IReduxState) => state.showCategoryContainer);
   const [tokenIsValid, setTokenIsValid] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();

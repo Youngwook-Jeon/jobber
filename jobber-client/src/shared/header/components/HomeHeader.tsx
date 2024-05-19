@@ -14,6 +14,8 @@ import { IReduxState } from 'src/store/store.interface';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IHomeHeaderProps } from '../interfaces/header.interface';
+import { updateCategoryContainer } from '../reducers/category.reducer';
+import { updateHeader } from '../reducers/header.reducer';
 import SettingsDropdown from './SettingsDropdown';
 
 const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactElement => {
@@ -129,10 +131,10 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                   <div className="w-full gap-x-4 md:flex">
                     <Link
                       to="/"
-                      //   onClick={() => {
-                      //     dispatch(updateHeader('home'));
-                      //     dispatch(updateCategoryContainer(true));
-                      //   }}
+                      onClick={() => {
+                        dispatch(updateHeader('home'));
+                        dispatch(updateCategoryContainer(true));
+                      }}
                       className="relative z-10 flex cursor-pointer justify-center self-center text-2xl font-semibold text-black lg:text-3xl"
                     >
                       Jobber

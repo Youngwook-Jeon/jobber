@@ -8,7 +8,7 @@ echo "Sleeping for 15s"
 sleep 15
 cd ../services
 
-server_dirs=("auth-service" "user-service")
+server_dirs=("auth-service" "user-service" "gig-service" "order-service" "review-service" "chat-service" "notification-service" "gateway-service")
 
 for dir in "${server_dirs[@]}"; do
   echo "Starting the $dir"

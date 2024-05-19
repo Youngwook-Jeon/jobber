@@ -1,10 +1,49 @@
-import { FC, ReactElement } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { FC, ReactElement, useEffect } from 'react';
+import { ISellerGig } from 'src/features/gig/interfaces/gig.interface';
+import { useGetGigsByCategoryQuery, useGetTopRatedGigsByCategoryQuery } from 'src/features/gig/services/gig.service';
+import { ISellerDocument } from 'src/features/seller/interfaces/seller.interface';
+import { useGetRandomSellersQuery } from 'src/features/seller/services/seller.service';
+// import TopGigsView from 'src/shared/gig/TopGigsView';
+import { lowerCase } from 'src/shared/utils/utils.service';
+// import { socketService } from 'src/sockets/socket.service';
+import { useAppSelector } from 'src/store/store';
+import { IReduxState } from 'src/store/store.interface';
 
 import FeaturedExperts from './FeaturedExperts';
 import HomeGigsView from './HomeGigsView';
 import HomeSlider from './HomeSlider';
 
 const Home: FC = (): ReactElement => {
+  const authUser = useAppSelector((state: IReduxState) => state.authUser);
+  const { data, isSuccess } = useGetRandomSellersQuery('10');
+  const { data: categoryData, isSuccess: isCategorySuccess } = useGetGigsByCategoryQuery(`${authUser.username}`);
+  const { data: topGigsData, isSuccess: isTopGigsSuccess } = useGetTopRatedGigsByCategoryQuery(`${authUser.username}`);
+  // const { data: sellerData, isSuccess: isSellerDataSuccess } = useGetMoreGigsLikeThisQuery('6559d9a3620b7db8c1fb7f01');
+  let sellers: ISellerDocument[] = [];
+  let categoryGigs: ISellerGig[] = [];
+  let topGigs: ISellerGig[] = [];
+
+  if (isSuccess) {
+    sellers = data.sellers as ISellerDocument[];
+  }
+
+  if (isCategorySuccess) {
+    categoryGigs = categoryData.gigs as ISellerGig[];
+  }
+
+  if (isTopGigsSuccess) {
+    topGigs = topGigsData.gigs as ISellerGig[];
+  }
+
+  // if (isSellerDataSuccess) {
+  //   topGigs = sellerData.gigs as ISellerGig[];
+  // }
+
+  // useEffect(() => {
+  //   socketService.setupSocketConnection();
+  // }, []);
+
   return (
     <div className="m-auto px-6 w-screen relative min-h-screen xl:container md:px-12 lg:px-6">
       <HomeSlider />
@@ -17,13 +56,11 @@ const Home: FC = (): ReactElement => {
           width="w-72"
           type="home"
         />
-      )}
+      )} */}
       {categoryGigs.length > 0 && (
         <HomeGigsView gigs={categoryGigs} title="Because you viewed a gig on" subTitle="" category={categoryGigs[0].categories} />
       )}
-      <FeaturedExperts sellers={sellers} /> */}
-      <HomeGigsView gigs={[]} title="Because you viewed a gig on" subTitle="" category="Programming & Tech" />
-      <FeaturedExperts sellers={[]} />
+      <FeaturedExperts sellers={sellers} />
     </div>
   );
 };
