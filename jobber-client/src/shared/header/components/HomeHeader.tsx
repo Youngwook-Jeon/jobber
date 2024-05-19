@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { IHomeHeaderProps } from '../interfaces/header.interface';
 import { updateCategoryContainer } from '../reducers/category.reducer';
 import { updateHeader } from '../reducers/header.reducer';
+import HeaderSearchInput from './HeaderSearchInput';
 import SettingsDropdown from './SettingsDropdown';
 
 const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactElement => {
@@ -139,7 +140,7 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                     >
                       Jobber
                     </Link>
-                    {/* <HeaderSearchInput /> */}
+                    <HeaderSearchInput />
                   </div>
                 </div>
                 {/* <MobileHeaderSearchInput setOpenSidebar={setOpenSidebar} /> */}

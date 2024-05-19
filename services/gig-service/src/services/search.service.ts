@@ -54,11 +54,15 @@ const gigsSearch = async (
   ];
 
   if (deliveryTime !== 'undefined') {
+    // const expectedDelivery = `${deliveryTime} Days Delivery`;
     queryList.push({
       query_string: {
         fields: ['expectedDelivery'],
         query: `*${deliveryTime}*`
       }
+      // term: {
+      //   expectedDelivery
+      // }
     });
   }
 

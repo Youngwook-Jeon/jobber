@@ -8,6 +8,7 @@ import BuyerDashboard from './features/buyer/components/Dashboard';
 import Error from './features/error/Error';
 import AddGig from './features/gig/components/gig/AddGig';
 import EditGig from './features/gig/components/gig/EditGig';
+import Gigs from './features/gig/components/gigs/Gigs';
 import GigView from './features/gig/components/view/GigView';
 import Home from './features/home/components/Home';
 import ProtectedRoute from './features/ProtectedRoute';
@@ -164,6 +165,30 @@ const AppRouter: FC = () => {
           <ProtectedRoute>
             <Layout backgroundColor="#ffffff">
               <GigView />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/categories/:category',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <Gigs type="categories" />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/search/gigs',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <Gigs type="search" />
             </Layout>
           </ProtectedRoute>
         </Suspense>

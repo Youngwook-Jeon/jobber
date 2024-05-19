@@ -21,8 +21,8 @@ export interface IGigPaginateProps {
   totalGigs: number;
   itemsPerPage: number;
   showNumbers: boolean;
-  setItemFrom: Dispatch<SetStateAction<string>>;
-  setPaginationType: Dispatch<SetStateAction<string>>;
+  currentPage: number;
+  handlePageChange: (pageNumber: number) => void;
 }
 
 export interface IAllowedGigItem {
