@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import StickyBox from 'react-sticky-box';
 import { ISellerDocument } from 'src/features/seller/interfaces/seller.interface';
 import { useGetSellerByIdQuery } from 'src/features/seller/services/seller.service';
-// import TopGigsView from 'src/shared/gig/TopGigsView';
+import TopGigsView from 'src/shared/gig/TopGigsView';
 import CircularPageLoader from 'src/shared/page-loader/CircularPageLoader';
 import StarRating from 'src/shared/rating/StarRating';
 import { emptyGigData, emptySellerData } from 'src/shared/utils/static-data';
@@ -83,7 +83,7 @@ const GigView: FC = (): ReactElement => {
           </GigContext.Provider>
           {moreGigs.current.length > 0 ? (
             <div className="m-auto px-6 xl:container md:px-12 lg:px-6">
-              {/* <TopGigsView gigs={moreGigs.current} title="Recommended for you" subTitle="" width="w-60" type="home" /> */}
+              <TopGigsView gigs={moreGigs.current} title="Recommended for you" subTitle="" width="w-60" type="home" />
             </div>
           ) : (
             <></>

@@ -4,14 +4,7 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { IGigPaginateProps } from 'src/features/gig/interfaces/gig.interface';
 import { v4 as uuidv4 } from 'uuid';
 
-const GigPaginate: FC<IGigPaginateProps> = ({
-  gigs,
-  totalGigs,
-  showNumbers,
-  itemsPerPage,
-  currentPage,
-  handlePageChange
-}): ReactElement => {
+const GigPaginate: FC<IGigPaginateProps> = ({ totalGigs, showNumbers, itemsPerPage, currentPage, handlePageChange }): ReactElement => {
   const paginationCount: number[] = [...Array(Math.ceil((totalGigs as number) / itemsPerPage)).keys()];
 
   const handlePrevPage = () => {

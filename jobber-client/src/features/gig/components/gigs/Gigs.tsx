@@ -106,7 +106,6 @@ const Gigs: FC<IGigsProps> = ({ type }) => {
           {isError && <PageMessage header="Services issue" body="A network issue occured. Try agin later." />}
           {isSuccess && !filterApplied && data && data.gigs && data.gigs.length > 0 && (
             <GigPaginate
-              gigs={gigs.current}
               totalGigs={totalGigs}
               showNumbers={true}
               itemsPerPage={ITEMS_PER_PAGE}

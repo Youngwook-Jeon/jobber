@@ -118,8 +118,8 @@ const BudgetDropdown: FC = (): ReactElement => {
             }
             onClick={() => {
               const updatedSearchParams: URLSearchParams = new URLSearchParams(searchParams.toString());
-              updatedSearchParams.delete('minPrice');
-              updatedSearchParams.delete('maxPrice');
+              updatedSearchParams.delete('minprice');
+              updatedSearchParams.delete('maxprice');
               setSearchParams(updatedSearchParams);
               setToggleDropdown(false);
               setSelectedBudget({ minPrice: '', maxPrice: '' });

@@ -4,7 +4,7 @@ import { ISellerGig } from 'src/features/gig/interfaces/gig.interface';
 import { useGetGigsByCategoryQuery, useGetTopRatedGigsByCategoryQuery } from 'src/features/gig/services/gig.service';
 import { ISellerDocument } from 'src/features/seller/interfaces/seller.interface';
 import { useGetRandomSellersQuery } from 'src/features/seller/services/seller.service';
-// import TopGigsView from 'src/shared/gig/TopGigsView';
+import TopGigsView from 'src/shared/gig/TopGigsView';
 import { lowerCase } from 'src/shared/utils/utils.service';
 // import { socketService } from 'src/sockets/socket.service';
 import { useAppSelector } from 'src/store/store';
@@ -19,7 +19,7 @@ const Home: FC = (): ReactElement => {
   const { data, isSuccess } = useGetRandomSellersQuery('10');
   const { data: categoryData, isSuccess: isCategorySuccess } = useGetGigsByCategoryQuery(`${authUser.username}`);
   const { data: topGigsData, isSuccess: isTopGigsSuccess } = useGetTopRatedGigsByCategoryQuery(`${authUser.username}`);
-  // const { data: sellerData, isSuccess: isSellerDataSuccess } = useGetMoreGigsLikeThisQuery('6559d9a3620b7db8c1fb7f01');
+  // const { data: sellerData, isSuccess: isSellerDataSuccess } = useGetMoreGigsLikeThisQuery('');
   let sellers: ISellerDocument[] = [];
   let categoryGigs: ISellerGig[] = [];
   let topGigs: ISellerGig[] = [];
@@ -36,10 +36,6 @@ const Home: FC = (): ReactElement => {
     topGigs = topGigsData.gigs as ISellerGig[];
   }
 
-  // if (isSellerDataSuccess) {
-  //   topGigs = sellerData.gigs as ISellerGig[];
-  // }
-
   // useEffect(() => {
   //   socketService.setupSocketConnection();
   // }, []);
@@ -47,7 +43,7 @@ const Home: FC = (): ReactElement => {
   return (
     <div className="m-auto px-6 w-screen relative min-h-screen xl:container md:px-12 lg:px-6">
       <HomeSlider />
-      {/* {topGigs.length > 0 && (
+      {topGigs.length > 0 && (
         <TopGigsView
           gigs={topGigs}
           title="Top rated services in"
@@ -56,7 +52,7 @@ const Home: FC = (): ReactElement => {
           width="w-72"
           type="home"
         />
-      )} */}
+      )}
       {categoryGigs.length > 0 && (
         <HomeGigsView gigs={categoryGigs} title="Because you viewed a gig on" subTitle="" category={categoryGigs[0].categories} />
       )}

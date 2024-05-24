@@ -17,7 +17,6 @@ export interface ITagsInputProps {
 }
 
 export interface IGigPaginateProps {
-  gigs: ISellerGig[];
   totalGigs: number;
   itemsPerPage: number;
   showNumbers: boolean;
