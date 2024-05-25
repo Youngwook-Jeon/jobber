@@ -5,6 +5,7 @@ import AppPage from './features/AppPage';
 import ConfirmEmail from './features/auth/components/ConfirmEmail';
 import ResetPassword from './features/auth/components/ResetPassword';
 import BuyerDashboard from './features/buyer/components/Dashboard';
+import Chat from './features/chat/components/Chat';
 import Error from './features/error/Error';
 import AddGig from './features/gig/components/gig/AddGig';
 import EditGig from './features/gig/components/gig/EditGig';
@@ -189,6 +190,30 @@ const AppRouter: FC = () => {
           <ProtectedRoute>
             <Layout backgroundColor="#ffffff">
               <Gigs type="search" />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/inbox',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <Chat />
+            </Layout>
+          </ProtectedRoute>
+        </Suspense>
+      )
+    },
+    {
+      path: '/inbox/:username/:conversationId',
+      element: (
+        <Suspense>
+          <ProtectedRoute>
+            <Layout backgroundColor="#ffffff">
+              <Chat />
             </Layout>
           </ProtectedRoute>
         </Suspense>

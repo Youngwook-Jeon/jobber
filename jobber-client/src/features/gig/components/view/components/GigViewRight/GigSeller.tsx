@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, ReactElement, useContext, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-// import ChatBox from 'src/features/chat/components/chatbox/ChatBox';
+import ChatBox from 'src/features/chat/components/chatbox/ChatBox';
 import { IChatBuyerProps, IChatSellerProps } from 'src/features/chat/interfaces/chat.interface';
 import { GigContext } from 'src/features/gig/context/GigContext';
 import { ILanguage } from 'src/features/seller/interfaces/seller.interface';
@@ -124,7 +123,7 @@ const GigSeller: FC = (): ReactElement => {
             />
           </div>
         </div>
-        {/* {showChatBox && <ChatBox seller={chatSeller} buyer={chatBuyer} gigId={`${gig.id}`} onClose={() => setShowChatBox(false)} />} */}
+        {showChatBox && <ChatBox seller={chatSeller} buyer={chatBuyer} gigId={`${gig.id}`} onClose={() => setShowChatBox(false)} />}
       </div>
     </>
   );
