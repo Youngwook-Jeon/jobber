@@ -17,6 +17,7 @@ import { IHomeHeaderProps } from '../interfaces/header.interface';
 import { updateCategoryContainer } from '../reducers/category.reducer';
 import { updateHeader } from '../reducers/header.reducer';
 import HeaderSearchInput from './HeaderSearchInput';
+import MessageDropdown from './MessageDropdown';
 import SettingsDropdown from './SettingsDropdown';
 
 const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactElement => {
@@ -36,10 +37,9 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
   const [resendEmail] = useResendEmailMutation();
 
   const [isSettingsDropdown, setIsSettingsDropdown] = useDetectOutsideClick(settingsDropdownRef, false);
-  // const [isMessageDropdownOpen, setIsMessageDropdownOpen] = useDetectOutsideClick(messageDropdownRef, false);
+  const [isMessageDropdownOpen, setIsMessageDropdownOpen] = useDetectOutsideClick(messageDropdownRef, false);
   // const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] = useDetectOutsideClick(notificationDropdownRef, false);
   // const [isOrderDropdownOpen, setIsOrderDropdownOpen] = useDetectOutsideClick(orderDropdownRef, false);
-  const isMessageDropdownOpen = false;
   const isNotificationDropdownOpen = false;
   const isOrderDropdownOpen = false;
 
@@ -55,19 +55,19 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
 
   const toggleDropdown = (): void => {
     setIsSettingsDropdown(!isSettingsDropdown);
-    // setIsMessageDropdownOpen(false);
+    setIsMessageDropdownOpen(false);
     // setIsNotificationDropdownOpen(false);
     // setIsOrderDropdownOpen(false);
   };
 
-  // const toggleMessageDropdown = (): void => {
-  //   setIsMessageDropdownOpen(!isMessageDropdownOpen);
-  //   setIsNotificationDropdownOpen(false);
-  //   setIsOrderDropdownOpen(false);
-  //   setIsSettingsDropdown(false);
-  //   dispatch(updateHeader('home'));
-  //   dispatch(updateCategoryContainer(true));
-  // };
+  const toggleMessageDropdown = (): void => {
+    setIsMessageDropdownOpen(!isMessageDropdownOpen);
+    // setIsNotificationDropdownOpen(false);
+    // setIsOrderDropdownOpen(false);
+    setIsSettingsDropdown(false);
+    dispatch(updateHeader('home'));
+    dispatch(updateCategoryContainer(true));
+  };
 
   // const toggleOrdersDropdown = (): void => {
   //   setIsOrderDropdownOpen(!isOrderDropdownOpen);
@@ -180,8 +180,7 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                     <li className="relative z-50 flex cursor-pointer items-center">
                       <Button
                         className="relative px-4"
-                        // onClick={toggleMessageDropdown}
-                        onClick={() => {}}
+                        onClick={toggleMessageDropdown}
                         label={
                           <>
                             <FaRegEnvelope />
@@ -201,9 +200,9 @@ const HomeHeader: FC<IHomeHeaderProps> = ({ showCategoryContainer }): ReactEleme
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                       >
-                        {/* <div className="absolute right-0 mt-5 w-96">
+                        <div className="absolute right-0 mt-5 w-96">
                           <MessageDropdown setIsMessageDropdownOpen={setIsMessageDropdownOpen} />
-                        </div> */}
+                        </div>
                       </Transition>
                     </li>
                     <li
