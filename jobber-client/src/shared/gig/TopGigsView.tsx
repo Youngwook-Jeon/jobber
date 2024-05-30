@@ -3,7 +3,7 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { IGigTopProps, ISellerGig } from 'src/features/gig/interfaces/gig.interface';
 import GigIndexItem from 'src/features/index/gig-tabs/GigIndexItem';
-// import { socket } from 'src/sockets/socket.service';
+import { socket } from 'src/sockets/socket.service';
 import { v4 as uuidv4 } from 'uuid';
 
 import { replaceSpacesWithDash } from '../utils/utils.service';
@@ -48,8 +48,7 @@ const TopGigsView: FC<IGigTopProps> = ({ gigs, title, subTitle, category, width,
               <h2 className="text-base font-bold md:text-lg lg:text-2xl">{title}</h2>
               {category && (
                 <span className="flex self-center text-base font-bold cursor-pointer text-sky-500 md:text-lg lg:text-2xl hover:text-sky-400 hover:underline">
-                  {/* <Link onClick={() => socket.emit('getLoggedInUsers', '')} to={`/categories/${replaceSpacesWithDash(category)}`}> */}
-                  <Link onClick={() => {}} to={`/categories/${replaceSpacesWithDash(category)}`}>
+                  <Link onClick={() => socket.emit('getLoggedInUsers', '')} to={`/categories/${replaceSpacesWithDash(category)}`}>
                     {category}
                   </Link>
                 </span>

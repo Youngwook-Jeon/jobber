@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { find } from 'lodash';
 import { FC, ReactElement, useEffect, useRef } from 'react';
 import { FaPencilAlt, FaRegStar, FaStar } from 'react-icons/fa';
@@ -6,7 +5,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import { IGigCardItems, ISellerGig } from 'src/features/gig/interfaces/gig.interface';
 import { rating, replaceAmpersandAndDashWithSpace } from 'src/shared/utils/utils.service';
-// import { socket, socketService } from 'src/sockets/socket.service';
+import { socket, socketService } from 'src/sockets/socket.service';
 import { useAppSelector } from 'src/store/store';
 import { IReduxState } from 'src/store/store.interface';
 
@@ -26,17 +25,17 @@ const GigCardDisplayItem: FC<IGigCardItems> = ({ gig, linkTarget, showEditIcon }
   const saveGigTitle = (gig: ISellerGig): void => {
     if (authUser?.username) {
       const category: string = replaceAmpersandAndDashWithSpace(gig.categories);
-      // socket.emit('category', category, authUser.username);
+      socket.emit('category', category, authUser.username);
     }
   };
 
-  // useEffect(() => {
-  //   socketService.setupSocketConnection();
-  //   socket.emit('getLoggedInUsers', '');
-  //   socket.on('online', (data: string[]) => {
-  //     sellerUsername.current = find(data, (name: string) => name === gig.username) as string;
-  //   });
-  // }, [authUser.username, gig.username]);
+  useEffect(() => {
+    socketService.setupSocketConnection();
+    socket.emit('getLoggedInUsers', '');
+    socket.on('online', (data: string[]) => {
+      sellerUsername.current = find(data, (name: string) => name === gig.username) as string;
+    });
+  }, [authUser.username, gig.username]);
 
   return (
     <div className="rounded">

@@ -6,7 +6,7 @@ import { Location, NavigateFunction, useLocation, useNavigate, useParams } from 
 // import { updateNotification } from 'src/shared/header/reducers/notification.reducer';
 import { TimeAgo } from 'src/shared/utils/timeago.utils';
 import { isFetchBaseQueryError, lowerCase, showErrorToast } from 'src/shared/utils/utils.service';
-// import { socket } from 'src/sockets/socket.service';
+import { socket } from 'src/sockets/socket.service';
 import { useAppDispatch, useAppSelector } from 'src/store/store';
 import { IReduxState } from 'src/store/store.interface';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,7 +35,7 @@ const ChatList: FC = (): ReactElement => {
       const locationPathname: string = !pathList.join('/') ? location.pathname : pathList.join('/');
       const chatUsername: string = (user.receiverUsername !== authUser?.username ? user.receiverUsername : user.senderUsername) as string;
       navigate(`${locationPathname}/${lowerCase(chatUsername)}/${user.conversationId}`);
-      // socket.emit('getLoggedInUsers', '');
+      socket.emit('getLoggedInUsers', '');
       if (user.receiverUsername === authUser?.username && lowerCase(`${user.senderUsername}`) === username && !user.isRead) {
         const list: IMessageDocument[] = filter(
           chatList,

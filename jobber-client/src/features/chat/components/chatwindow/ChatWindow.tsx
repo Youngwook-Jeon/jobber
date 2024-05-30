@@ -13,7 +13,7 @@ import OfferModal from 'src/shared/modals/OfferModal';
 import { checkFile, fileType, readAsBase64 } from 'src/shared/utils/image-utils.service';
 import { TimeAgo } from 'src/shared/utils/timeago.utils';
 import { firstLetterUppercase, showErrorToast } from 'src/shared/utils/utils.service';
-// import { socket, socketService } from 'src/sockets/socket.service';
+import { socket, socketService } from 'src/sockets/socket.service';
 import { useAppDispatch, useAppSelector } from 'src/store/store';
 import { IReduxState } from 'src/store/store.interface';
 import { v4 as uuidv4 } from 'uuid';
@@ -125,11 +125,11 @@ const ChatWindow: FC<IChatWindowProps> = ({ chatMessages, isLoading, setSkip }):
   }, [chatMessages, dispatch, username]);
 
   useEffect(() => {
-    // socketService.setupSocketConnection();
-    // socket.emit('getLoggedInUsers', '');
-    // socket.on('online', (data: string[]) => {
-    //   receiverUsername.current = find(data, (name: string) => name === receiverRef?.current?.username) as string;
-    // });
+    socketService.setupSocketConnection();
+    socket.emit('getLoggedInUsers', '');
+    socket.on('online', (data: string[]) => {
+      receiverUsername.current = find(data, (name: string) => name === receiverRef?.current?.username) as string;
+    });
   }, []);
 
   return (
