@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, ReactElement, useEffect } from 'react';
 import { ISellerGig } from 'src/features/gig/interfaces/gig.interface';
 import { useGetGigsByCategoryQuery, useGetTopRatedGigsByCategoryQuery } from 'src/features/gig/services/gig.service';
@@ -6,7 +5,7 @@ import { ISellerDocument } from 'src/features/seller/interfaces/seller.interface
 import { useGetRandomSellersQuery } from 'src/features/seller/services/seller.service';
 import TopGigsView from 'src/shared/gig/TopGigsView';
 import { lowerCase } from 'src/shared/utils/utils.service';
-// import { socketService } from 'src/sockets/socket.service';
+import { socketService } from 'src/sockets/socket.service';
 import { useAppSelector } from 'src/store/store';
 import { IReduxState } from 'src/store/store.interface';
 
@@ -36,9 +35,9 @@ const Home: FC = (): ReactElement => {
     topGigs = topGigsData.gigs as ISellerGig[];
   }
 
-  // useEffect(() => {
-  //   socketService.setupSocketConnection();
-  // }, []);
+  useEffect(() => {
+    socketService.setupSocketConnection();
+  }, []);
 
   return (
     <div className="m-auto px-6 w-screen relative min-h-screen xl:container md:px-12 lg:px-6">

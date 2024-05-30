@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { FC, ReactElement, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { IOrderDocument } from 'src/features/order/interfaces/order.interface';
-import { orderTypes } from 'src/shared/utils/utils.service';
+import { useGetOrdersByBuyerIdQuery } from 'src/features/order/services/order.service';
+import { orderTypes, shortenLargeNumbers } from 'src/shared/utils/utils.service';
+import { socket, socketService } from 'src/sockets/socket.service';
 
 import BuyerTable from './BuyerTable';
-// import { useParams } from 'react-router-dom';
 
 const BUYER_GIG_STATUS = {
   ACTIVE: 'active',
@@ -13,10 +15,20 @@ const BUYER_GIG_STATUS = {
   DELIVERED: 'delivered'
 };
 
-const BuyerDashboard = () => {
+const BuyerDashboard: FC = (): ReactElement => {
   const [type, setType] = useState<string>(BUYER_GIG_STATUS.ACTIVE);
-  //   const { buyerId } = useParams<string>();
-  const orders: IOrderDocument[] = [];
+  const { buyerId } = useParams<string>();
+  const { data, isSuccess } = useGetOrdersByBuyerIdQuery(`${buyerId}`);
+  let orders: IOrderDocument[] = [];
+  if (isSuccess) {
+    orders = data.orders as IOrderDocument[];
+  }
+
+  useEffect(() => {
+    socketService.setupSocketConnection();
+    socket.emit('getLoggedInUsers', '');
+  }, []);
+
   return (
     <div className="container mx-auto mt-8 px-6 md:px-12 lg:px-6">
       <div className="flex flex-col flex-wrap">
@@ -30,7 +42,12 @@ const BuyerDashboard = () => {
                   type === BUYER_GIG_STATUS.ACTIVE ? 'pb-[15px] outline outline-1 outline-[#e8e8e8] sm:rounded-t-lg' : ''
                 }`}
               >
-                Active <span className="ml-1 rounded-[5px] bg-sky-500 px-[5px] py-[1px] text-xs font-medium text-white">2</span>
+                Active
+                {orderTypes(BUYER_GIG_STATUS.IN_PROGRESS, orders) > 0 && (
+                  <span className="ml-1 rounded-[5px] bg-sky-500 px-[5px] py-[1px] text-xs font-medium text-white">
+                    {shortenLargeNumbers(orderTypes(BUYER_GIG_STATUS.IN_PROGRESS, orders))}
+                  </span>
+                )}
               </a>
             </li>
             <li className="inline-block py-3 uppercase" onClick={() => setType(BUYER_GIG_STATUS.COMPLETED)}>
@@ -40,7 +57,12 @@ const BuyerDashboard = () => {
                   type === BUYER_GIG_STATUS.COMPLETED ? 'pb-[15px] outline outline-1 outline-[#e8e8e8] sm:rounded-t-lg' : ''
                 }`}
               >
-                Completed <span className="ml-1 rounded-[5px] bg-sky-500 px-[5px] py-[1px] text-xs font-medium text-white">1</span>
+                Completed
+                {orderTypes(BUYER_GIG_STATUS.COMPLETED, orders) > 0 && (
+                  <span className="ml-1 rounded-[5px] bg-sky-500 px-[5px] py-[1px] text-xs font-medium text-white">
+                    {shortenLargeNumbers(orderTypes(BUYER_GIG_STATUS.COMPLETED, orders))}
+                  </span>
+                )}
               </a>
             </li>
             <li className="inline-block py-3 uppercase" onClick={() => setType(BUYER_GIG_STATUS.CANCELLED)}>
@@ -50,7 +72,12 @@ const BuyerDashboard = () => {
                   type === BUYER_GIG_STATUS.CANCELLED ? 'pb-[15px] outline outline-1 outline-[#e8e8e8] sm:rounded-t-lg' : ''
                 }`}
               >
-                Cancelled <span className="ml-1 rounded-[5px] bg-sky-500 px-[5px] py-[1px] text-xs font-medium text-white">2</span>
+                Cancelled
+                {orderTypes(BUYER_GIG_STATUS.CANCELLED, orders) > 0 && (
+                  <span className="ml-1 rounded-[5px] bg-sky-500 px-[5px] py-[1px] text-xs font-medium text-white">
+                    {shortenLargeNumbers(orderTypes(BUYER_GIG_STATUS.CANCELLED, orders))}
+                  </span>
+                )}
               </a>
             </li>
           </ul>
