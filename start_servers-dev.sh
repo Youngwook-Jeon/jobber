@@ -2,7 +2,7 @@
 cd volumes
 
 echo "Starting the backing services of Jobber..."
-docker-compose start
+docker compose start
 echo "Done"
 echo "Sleeping for 15s"
 sleep 15

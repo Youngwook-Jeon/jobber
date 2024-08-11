@@ -5,6 +5,6 @@ killall node
 
 echo "Stopping Docker containers..."
 cd volumes
-docker-compose stop
+docker compose stop
 
 echo "All services stopped and cleaned up."
